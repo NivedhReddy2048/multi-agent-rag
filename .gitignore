@@ -1,0 +1,44 @@
+# Virtual environments
+.verify-venv/
+venv/
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Environment variables
+.env
+
+# Streamlit cache
+.streamlit/
+
+# IDE
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Project-specific files
+rag_system.db
+*.db-journal
+agent_flow.png
+tests/test_output/
+
+# Build / Distribution
+build/
+dist/
+*.egg-info/
+
+# Logs
+*.log
+
+# Coverage
+.coverage
+htmlcov/
+
+# Local databases
+*.db

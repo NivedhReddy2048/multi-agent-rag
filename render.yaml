@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: enterprise-multiagent-rag
+    env: docker
+    plan: starter
+    healthCheckPath: /?health=1
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: TAVILY_API_KEY
+        sync: false
+      - key: GITHUB_TOKEN
+        sync: false
+      - key: CHROMA_DB_PATH
+        value: /app/data/chroma_db
+      - key: DB_PATH
+        value: /app/data/observability.db
+    disk:
+      name: rag-data
+      mountPath: /app/data
+      sizeGB: 5

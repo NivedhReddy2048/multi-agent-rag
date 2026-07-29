@@ -1,0 +1,26 @@
+Enterprise Knowledge Intelligence Platform (EKIP) Policy
+Document ID: POL-2026-EKIP-01
+Version: 1.4
+
+1. Overview
+This policy outlines the guidelines for the Enterprise Knowledge Intelligence Platform (EKIP).
+
+2. RAG Retrieval Guidelines
+To ensure accurate knowledge synthesis, the EKIP system must use a hybrid retrieval strategy:
+- Dense similarity matching using ChromaDB vector database.
+- Sparse keyword search using the BM25 algorithm.
+- Combine these results using Reciprocal Rank Fusion (RRF) with a default k parameter of 60.
+- CrossEncoder reranking (specifically using ms-marco-MiniLM-L-6-v2) must be applied to the top 20 fused results.
+- Minimum relevance threshold for retrieved chunks is set to 0.65.
+
+3. Vector Indexing Guidelines
+- Chunk size for document ingestion must be set to 500 tokens.
+- Chunk overlap must be set to 50 tokens to preserve context across chunk boundaries.
+- All documents must be tagged with mandatory metadata: Document Name, Page Number, Chunk ID, and Creation Date.
+- Vector indexing must use Cosine similarity metric.
+- Dynamic indexing updates must run on a weekly schedule.
+
+4. Corrective RAG (CRAG) and Web Search Fallback
+- If the top similarity score is below 0.60, the system must trigger Corrective RAG (CRAG).
+- The CRAG agent will route the query to Tavily Web Search API to retrieve supplementary web sources.
+- The web search results must be merged with the vector database sources to construct the final response context.

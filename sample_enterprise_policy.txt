@@ -1,0 +1,20 @@
+# Global Enterprise AI & Security Governance Policy 2026
+
+## 1. Executive Overview
+The Enterprise Knowledge Intelligence Platform (EKIP) governs all artificial intelligence deployments across Global Corp. This policy outlines mandatory protocols for retrieval-augmented generation (RAG), document security, data privacy, and agentic access control.
+
+## 2. RAG Retrieval & Vector Indexing Guidelines
+- All corporate documents must be ingested using 1000-character chunk sizes with 200-character overlaps.
+- Vector embeddings are processed via the all-MiniLM-L6-v2 model and indexed in persistent ChromaDB storage.
+- Dense retrieval results must be fused with BM25 sparse keyword scores using Reciprocal Rank Fusion (RRF) with k=60.
+- CrossEncoder reranking (ms-marco-MiniLM-L-6-v2) is mandatory for top-8 chunk selection prior to synthesis.
+
+## 3. Corrective RAG (CRAG) & Web Search Fallbacks
+- Retrieval sufficiency is evaluated on a 0.0 to 1.0 semantic coverage scale.
+- If retrieval confidence falls below 0.35, the CRAG agent automatically initiates web search fallbacks via Tavily API.
+- Web search context must be explicitly tagged with source domain metadata to prevent hallucination.
+
+## 4. Compliance, Auditability, and Data Protection
+- Conversations are persisted in SQLite WAL database tables with encrypted session IDs.
+- User feedback (thumbs up / thumbs down) is logged for quality assurance and continuous model alignment.
+- Out-of-scope queries triggering red-flag phrases ("as an AI", "no information") are intercepted by the ValidationAgent.
