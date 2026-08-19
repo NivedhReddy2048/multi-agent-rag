@@ -7,11 +7,11 @@ from core.providers import provider_registry, ProviderStatus, ProviderCategory, 
 
 def test_config_key_masking():
     """Verify key masking never exposes raw secret strings."""
-    secret = "AIzaSyAl0U5gT44EbygUIiZUSuzHxVTu2EdNwMA"
+    secret = "fake_dummy_test_api_key_for_masking_12345"
     masked = mask_api_key(secret)
     assert secret not in masked or len(secret) < 10
-    assert masked.startswith("AIza")
-    assert masked.endswith("wMA")
+    assert masked.startswith("fake")
+    assert masked.endswith("2345")
     assert "..." in masked
 
 

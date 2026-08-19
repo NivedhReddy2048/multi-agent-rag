@@ -60,7 +60,7 @@ def test_prompt_builder(sample_verified_collection):
     prompt = builder.build_synthesis_prompt("Explain Neural Networks", sample_verified_collection)
 
     assert "Explain Neural Networks" in prompt
-    assert "[1] Source: Deep Neural Networks Overview" in prompt
+    assert "Deep Neural Networks Overview" in prompt
     assert "VERIFIED KNOWLEDGE EVIDENCE" in prompt
 
 

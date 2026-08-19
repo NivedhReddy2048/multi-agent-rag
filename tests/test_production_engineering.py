@@ -173,8 +173,8 @@ def test_security_manager():
     assert "Prompt injection" in msg
 
     # Sensitive data masking
-    masked = SecurityManager.mask_sensitive_data("Using key AIzaSyAl0U5gT44EbygUIiZUSuzHxVTu2EdNwMA for request")
-    assert "AIzaSy*********************" in masked
+    masked = SecurityManager.mask_sensitive_data("Using key jina_dummy_test_key_placeholder_for_unit_test for request")
+    assert "jina_*********************" in masked
 
 
 def test_observability():

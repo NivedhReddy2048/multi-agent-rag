@@ -28,3 +28,4 @@ tavily-python>=0.5
 wordcloud>=1.9
 pytest>=8.0
 loguru>=0.7.0
+PyJWT>=2.8.0
