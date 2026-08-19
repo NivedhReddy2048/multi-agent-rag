@@ -17,7 +17,7 @@ class TestEKIPBackend(unittest.TestCase):
 
     def test_01_config_validation(self):
         """Verify configuration settings and defaults."""
-        self.assertEqual(Config.APP_TITLE, "Enterprise Knowledge Intelligence Platform (EKIP)")
+        self.assertEqual(Config.APP_TITLE, "Educational Knowledge Intelligence Platform (EKIP)")
         self.assertIn("all-MiniLM-L6-v2", Config.EMBEDDING_MODEL)
         self.assertEqual(Config.RERANKER_MODEL, "cross-encoder/ms-marco-MiniLM-L-6-v2")
         self.assertGreaterEqual(len(Config.LLM_FALLBACK_MODELS), 3)
@@ -32,7 +32,7 @@ class TestEKIPBackend(unittest.TestCase):
         """Test multi-format document loading and chunk metadata tags."""
         with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp_dir:
             test_file = Path(tmp_dir) / "sample_doc.txt"
-            test_file.write_text("Enterprise Knowledge Intelligence Platform enables RAG search at scale.\n" * 20, encoding="utf-8")
+            test_file.write_text("Educational Knowledge Intelligence Platform enables RAG search at scale.\n" * 20, encoding="utf-8")
 
             loader = DocumentLoader(chunk_size=200, chunk_overlap=20)
             raw_docs = loader.load_file(str(test_file))
@@ -59,7 +59,7 @@ class TestEKIPBackend(unittest.TestCase):
             mem.add_message(
                 cid,
                 "assistant",
-                "EKIP is an AI-powered enterprise platform.",
+                "EKIP is an AI-powered educational platform.",
                 citations=[{"source_file": "doc1.pdf", "page": 1, "score": 0.95}],
                 confidence=95,
                 latency_ms=120,
@@ -82,7 +82,7 @@ class TestEKIPBackend(unittest.TestCase):
             db_file = Path(tmp_dir) / "test_telemetry.db"
             mem = ConversationMemory(str(db_file))
 
-            tokens = TelemetryTracker.calculate_estimated_tokens("What is enterprise RAG architecture?")
+            tokens = TelemetryTracker.calculate_estimated_tokens("What is RAG architecture?")
             self.assertGreater(tokens, 0)
 
             metrics = TelemetryTracker.record_query_metrics(
@@ -107,7 +107,8 @@ class TestEKIPBackend(unittest.TestCase):
         """Test health check and system API report."""
         health = PlatformAPI.get_health_status(None, Config)
         self.assertEqual(health["status"], "healthy")
-        self.assertEqual(health["app_title"], "Enterprise Knowledge Intelligence Platform (EKIP)")
+        self.assertEqual(health["app_title"], "Educational Knowledge Intelligence Platform (EKIP)")
+
 
 
 if __name__ == "__main__":

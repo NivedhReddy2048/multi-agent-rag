@@ -14,13 +14,56 @@ import json
 import pandas as pd
 import numpy as np
 from pathlib import Path
+from typing import Optional, List, Dict, Any, Tuple
+
+# Ensure UTF-8 output encoding for Windows consoles to prevent UnicodeEncodeError
+if hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
+if hasattr(sys.stderr, "reconfigure"):
+    try:
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
+
+def safe_print(*args, **kwargs):
+    """Safely print arguments to stdout without crashing on Windows cp1252 character mapping errors."""
+    try:
+        print(*args, **kwargs)
+    except UnicodeEncodeError:
+        encoding = getattr(sys.stdout, "encoding", None) or "utf-8"
+        file_obj = kwargs.get("file", sys.stdout)
+        sep = kwargs.get("sep", " ")
+        end = kwargs.get("end", "\n")
+        text = sep.join(str(arg) for arg in args)
+        safe_text = text.encode(encoding, errors="replace").decode(encoding, errors="replace")
+        try:
+            file_obj.write(safe_text + end)
+        except Exception:
+            pass
+
 
 # Ensure project root is on path
 BASE_DIR = Path(__file__).parent
 sys.path.insert(0, str(BASE_DIR))
 
+
 import streamlit as st
 from config import Config
+from core.auth.database import init_db
+from core.auth.session import initialize_auth_state, check_remember_me
+from core.chat.database import init_chat_db
+
+# Initialize Database & Auth State
+init_db()
+init_chat_db()
+initialize_auth_state()
+check_remember_me()
+
 from ui.theme import inject_theme
 from core.engine import BaseRAGEngine
 from core.memory import ConversationMemory
@@ -47,8 +90,69 @@ except Exception as val_err:
     st.info("Please set valid API keys in your `.env` file or environment variables.")
     st.stop()
 
-# ─── 1. Theme & UI Helpers ───
-st.markdown(inject_theme(), unsafe_allow_html=True)
+import importlib
+import ui.theme
+import ui.auth
+import ui.shell
+import ui.settings
+import ui.profile
+import ui.chat_sidebar
+importlib.reload(ui.theme)
+importlib.reload(ui.auth)
+importlib.reload(ui.shell)
+importlib.reload(ui.settings)
+importlib.reload(ui.profile)
+importlib.reload(ui.chat_sidebar)
+
+from ui.theme import inject_theme
+from ui.cover import render_cover_page
+from ui.auth import is_authenticated, render_login_page, render_signup_page, render_forgot_password_page, logout_user
+from ui.components import render_sidebar_brand, render_top_header, render_hero_banner, render_quick_starters
+from ui.shell import render_top_nav, render_sidebar_controls, render_sidebar_navigation
+from ui.settings import render_settings_page
+from ui.profile import render_profile_page
+from core.auth.database import get_user_theme
+
+# ─── 1. Theme & Authentication Routing Check ───
+user_session = st.session_state.get("user")
+if user_session and "theme" not in st.session_state:
+    st.session_state["theme"] = get_user_theme(user_session["username"])
+
+active_theme = st.session_state.get("theme", "dark")
+st.session_state["theme"] = active_theme
+st.markdown(inject_theme(active_theme), unsafe_allow_html=True)
+
+if not is_authenticated():
+    auth_view = st.session_state.get("auth_view", "cover")
+    if auth_view == "cover":
+        render_cover_page()
+    elif auth_view == "login":
+        render_login_page()
+    elif auth_view == "forgot":
+        render_forgot_password_page()
+    elif auth_view == "signup":
+        render_signup_page()
+    else:
+        render_cover_page()
+    st.stop()  # Prevent RAG UI from rendering below for unauthenticated users
+
+# ─── Authenticated Post-Login Workspace Setup ───
+if "sidebar_collapsed" not in st.session_state:
+    st.session_state.sidebar_collapsed = False
+
+from ui.theme import get_sidebar_toggle_css
+
+# 1. Sidebar CSS
+st.markdown(get_sidebar_toggle_css(), unsafe_allow_html=True)
+
+# 2. Reopen button (ONLY when sidebar is collapsed)
+if st.session_state.get("sidebar_collapsed", False):
+    c1, _ = st.columns([1, 30])
+    with c1:
+        if st.button("☰", key="sb_expand", help="Open sidebar", type="secondary"):
+            st.session_state.sidebar_collapsed = False
+            st.rerun()
+
 
 
 def render_source_card(source: dict) -> str:
@@ -88,6 +192,8 @@ def render_source_mode_badge(mode: str) -> str:
         return '<span style="background: #09b43a; color: #ffffff; padding: 2px 8px; border-radius: 10px; font-weight: 600; font-size: 0.78rem;">📄 + 🌐 Documents & Web</span>'
     elif mode == "web":
         return '<span style="background: #00a8ff; color: #ffffff; padding: 2px 8px; border-radius: 10px; font-weight: 600; font-size: 0.78rem;">🌐 Web Search</span>'
+    elif mode in ("general_knowledge", "general"):
+        return '<span style="background: #8b5cf6; color: #ffffff; padding: 2px 8px; border-radius: 10px; font-weight: 600; font-size: 0.78rem;">🧠 General Knowledge</span>'
     else:
         return '<span style="background: #6e7681; color: #ffffff; padding: 2px 8px; border-radius: 10px; font-weight: 600; font-size: 0.78rem;">⚠️ No Evidence</span>'
 
@@ -102,12 +208,20 @@ def render_llm_telemetry_pill(meta: Optional[dict]) -> str:
     tokens = meta.get("tokens", "--")
     fallback_occurred = meta.get("fallback_occurred", False)
     fallback_chain = meta.get("fallback_chain", [])
-    source_mode = meta.get("source_mode", "none")
+    source_mode = meta.get("source_mode", "general_knowledge")
     faithfulness = meta.get("faithfulness", 0.0)
     crag_score = meta.get("crag_score", meta.get("retrieval_score", 0.0))
     retrieved_chunks = meta.get("retrieved_chunks_count", 0)
     web_results = meta.get("web_results_count", 0)
-    decision = meta.get("decision", "Grounded Synthesis")
+
+    # Planner Authority & Diagnostic Metadata (Requirement 7)
+    exec_plan = meta.get("execution_plan", {})
+    planner_strat = meta.get("planner_source_strategy", exec_plan.get("source_strategy", "general_knowledge"))
+    runtime_strat = meta.get("runtime_source_strategy", planner_strat)
+    was_overridden = "Yes" if meta.get("was_planner_overridden", False) else "No"
+    doc_executed = "Yes" if meta.get("document_retrieval_executed", False) else "No"
+    override_reason = meta.get("override_reason") or "None"
+    decision = meta.get("decision", "General Educational Lesson")
 
     icon_map = {"gemini": "🔵", "groq": "⚡", "cohere": "🟢", "mistral": "🟠", "none": "⚠️", "unknown": "🤖"}
     icon = icon_map.get(provider, "🤖")
@@ -125,8 +239,10 @@ def render_llm_telemetry_pill(meta: Optional[dict]) -> str:
         <span><b>Provider:</b> {icon} <b>{provider.upper()}</b></span>
         <span><b>Model:</b> <code>{model}</code></span>
         <span><b>Source Mode:</b> {mode_badge}</span>
-        <span><b>Faithfulness:</b> {faithfulness:.2f}</span>
-        <span><b>CRAG Score:</b> {crag_score:.2f}</span>
+        <span><b>Planner Strategy:</b> <code>{planner_strat}</code></span>
+        <span><b>Runtime Strategy:</b> <code>{runtime_strat}</code></span>
+        <span><b>Planner Overridden?</b> {was_overridden}</span>
+        <span><b>Doc Retrieval Executed?</b> {doc_executed}</span>
         <span><b>Chunks:</b> {retrieved_chunks} | <b>Web:</b> {web_results}</span>
         <span><b>Decision:</b> <i>{decision}</i></span>
         <span><b>Fallback:</b> <span style="padding: 2px 8px; border-radius: 4px; font-weight: bold; {fallback_badge_css}">{chain_str}</span></span>
@@ -160,71 +276,68 @@ if st.query_params.get("health") == "1":
 
 # ─── 3. Sidebar Navigation & Controls ───
 with st.sidebar:
-    st.title(f"{Config.APP_ICON} EKIP Platform")
-    st.caption("AI-powered Multi-Agent Enterprise Knowledge Platform")
-    page = st.radio("Navigation", ["💬 Chat", "📊 Analytics", "📚 Documents", "🩺 LLM Health & Diagnostics"])
+    render_sidebar_brand()
+    
+    doc_cnt = len(engine.list_docs()) or 3
+    page = render_sidebar_navigation(doc_cnt)
 
-    st.markdown("---")
+    st.markdown('<div style="height: 8px;"></div>', unsafe_allow_html=True)
+    from ui.chat_sidebar import render_chat_history_sidebar
+    user_obj = st.session_state.get("user", {}) or {}
+    user_id = user_obj.get("username", "guest")
+    render_chat_history_sidebar(user_id)
 
-    if page == "💬 Chat":
-        if st.button("+ New Chat", use_container_width=True):
-            st.session_state.conversation_id = memory.create_conversation()
-            st.session_state.messages = []
-            logger.info("Created new chat session.")
-            st.rerun()
+    st.markdown('<div style="height: 12px;"></div>', unsafe_allow_html=True)
+    st.session_state.show_trace = st.toggle("Show Agent Trace", value=st.session_state.show_trace)
 
-        conversations = memory.list_conversations()
-        st.caption(f"💬 History ({len(conversations)} chats)")
-        for conv in conversations[:10]:
-            is_active = conv["id"] == st.session_state.conversation_id
-            label = f"▶ {conv['title']}" if is_active else conv["title"]
-            if st.button(label, key=f"conv_{conv['id']}", use_container_width=True):
-                st.session_state.conversation_id = conv["id"]
-                st.session_state.messages = memory.get_messages(conv["id"])
-                logger.info(f"Switched to conversation session '{conv['id']}'")
-                st.rerun()
+    if st.button("💾 Export Chat", use_container_width=True):
+        if st.session_state.messages:
+            md_text = ConversationExporter.to_markdown(st.session_state.messages)
+            st.download_button(
+                "Download Markdown", md_text, "chat_export.md", "text/markdown", key="dl_md"
+            )
+        else:
+            st.info("No chat messages to export.")
 
-        st.markdown("---")
-        st.session_state.show_trace = st.toggle("Show Agent Trace", value=st.session_state.show_trace)
-
-        if st.button("💾 Export Chat", use_container_width=True):
-            if st.session_state.messages:
-                md_text = ConversationExporter.to_markdown(st.session_state.messages)
-                st.download_button(
-                    "Download Markdown", md_text, "chat_export.md", "text/markdown", key="dl_md"
-                )
-            else:
-                st.info("No chat messages to export.")
+    st.markdown('<div style="border-top: 1px solid rgba(255,255,255,0.06); margin: 12px 0;"></div>', unsafe_allow_html=True)
+    st.markdown('<div style="font-size: 11px; color: #22c55e; font-weight: 500; padding: 0 10px;">🟢 System Operational</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sidebar-footer-info">User: Student | v2.5</div>', unsafe_allow_html=True)
+    st.markdown('<div style="height: 6px;"></div>', unsafe_allow_html=True)
+    if st.button("🔒 Logout", use_container_width=True):
+        logout_user()
 
 # Ensure messages are synced for active conversation
 if not st.session_state.messages and st.session_state.conversation_id:
     st.session_state.messages = memory.get_messages(st.session_state.conversation_id)
 
+# ─── Top Enterprise Navigation Header ───
+render_top_nav()
+
+current_pg = st.session_state.get("current_page")
+if current_pg == "profile":
+    from ui.profile import render_profile_page
+    render_profile_page()
+    st.stop()
+elif current_pg == "settings":
+    from ui.settings import render_settings_page
+    render_settings_page()
+    st.stop()
+
+page_titles = {
+    "💬 Chat": "Educational Knowledge Companion",
+    "🎓 Student Workspace": "Student Learning Workspace",
+    "📊 Analytics": "Query Analytics & Telemetry Dashboard",
+    "📚 Documents": "Document Repository & Ingestion Manager",
+    "🩺 LLM Health & Diagnostics": "Multi-LLM Health & Subsystem Diagnostics",
+}
+render_top_header(page_titles.get(page, page), doc_count=len(engine.list_docs()))
 
 # ─── 4. PAGE A: 💬 CHAT ───
 if page == "💬 Chat":
-    st.title("💬 Enterprise Knowledge Chat")
-
-    # Empty State Hero
+    # Empty State Hero & Quick Starters
     if not st.session_state.messages:
-        st.markdown("""
-        <div style="text-align: center; padding: 2.5rem 1rem; background: #161b22; border-radius: 12px; border: 1px solid #30363d; margin-bottom: 2rem;">
-            <h2 style="color: #4cc9f0; margin-bottom: 0.5rem;">Welcome to Enterprise Knowledge Intelligence Platform</h2>
-            <p style="color: #8b949e; max-width: 600px; margin: 0 auto 1.5rem auto;">
-                Upload enterprise PDFs, DOCX, CSV, Excel, PPTX, or text files to retrieve grounded insights with multi-agent orchestration, CRAG web fallback, and full auditability.
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
-
-        st.caption("Quick actions:")
-        col1, col2, col3 = st.columns(3)
-        quick_prompt = None
-        if col1.button("📑 What documents are indexed?", use_container_width=True):
-            quick_prompt = "What documents are indexed?"
-        if col2.button("📊 Generate a comprehensive report", use_container_width=True):
-            quick_prompt = "Generate a comprehensive report summarizing all uploaded documents."
-        if col3.button("🌐 Explain CRAG & Agent Workflow", use_container_width=True):
-            quick_prompt = "Explain how CRAG and agent workflow work in this RAG system."
+        render_hero_banner()
+        quick_prompt = render_quick_starters()
 
         if quick_prompt:
             prompt = quick_prompt
@@ -233,16 +346,19 @@ if page == "💬 Chat":
     else:
         prompt = None
 
+
+
     # Render History
-    print("=" * 80)
-    print(f"TASK 7: SESSION MESSAGES COUNT: {len(st.session_state.messages)}")
+    safe_print("=" * 80)
+    safe_print(f"TASK 7: SESSION MESSAGES COUNT: {len(st.session_state.messages)}")
     for idx, msg in enumerate(st.session_state.messages):
         if msg["role"] == "assistant":
-            print(f"  [MSG #{idx} ASSISTANT | id({id(msg)})]")
-            print(f"    Provider: {msg.get('metadata', {}).get('provider', 'UNKNOWN')}")
-            print(f"    Model   : {msg.get('metadata', {}).get('model', 'Unknown')}")
-            print(f"    Content : {repr(msg.get('content', ''))[:300]}")
-    print("=" * 80)
+            safe_print(f"  [MSG #{idx} ASSISTANT | id({id(msg)})]")
+            safe_print(f"    Provider: {msg.get('metadata', {}).get('provider', 'UNKNOWN')}")
+            safe_print(f"    Model   : {msg.get('metadata', {}).get('model', 'Unknown')}")
+            safe_print(f"    Content : {repr(msg.get('content', ''))[:300]}")
+    safe_print("=" * 80)
+
 
     for idx, msg in enumerate(st.session_state.messages):
         with st.chat_message(msg["role"]):
@@ -276,6 +392,257 @@ if page == "💬 Chat":
                     for t in msg["agent_trace"]:
                         st.markdown(f"- `{t}`")
 
+            # Knowledge Planner Execution Plan Expander
+            exec_p = msg.get("metadata", {}).get("execution_plan")
+            if st.session_state.show_trace and exec_p:
+                with st.expander("🧠 Knowledge Planner Execution Plan"):
+                    st.markdown(f"**Intent**: `{exec_p.get('intent', 'N/A')}` | **Difficulty**: `{exec_p.get('difficulty', 'N/A')}`")
+                    st.markdown(f"**Selected Sources**: `{exec_p.get('selected_sources', [])}`")
+                    st.markdown(f"**Retrieval Strategy**: `{exec_p.get('retrieval_strategy', 'N/A')}` | **Expected Output**: `{exec_p.get('expected_output', 'N/A')}`")
+                    st.markdown(f"**Latency Estimate**: `{exec_p.get('estimated_latency', 'N/A')}` | **Cost Estimate**: `{exec_p.get('estimated_cost', 'N/A')}`")
+                    if exec_p.get("reasoning_steps"):
+                        st.markdown("**Planner Reasoning Steps:**")
+                        for step in exec_p["reasoning_steps"]:
+                            st.markdown(f"- {step}")
+
+            # Developer-Only Phase 2.3 Knowledge Collection Panel
+            col_data = msg.get("metadata", {}).get("knowledge_collection")
+            if st.session_state.show_trace and col_data:
+                with st.expander("🌐 Phase 2.3 Parallel Knowledge Collection (Developer Panel)"):
+                    st.markdown(f"**Total Latency**: `{int(col_data.get('total_latency_ms', 0))} ms` | **Plan ID**: `{col_data.get('execution_plan_id', 'N/A')}`")
+                    st.markdown(f"**Requested Sources**: `{col_data.get('sources_requested', [])}`")
+                    st.markdown(f"✅ **Completed Sources**: `{col_data.get('sources_completed', [])}`")
+                    if col_data.get("sources_failed"):
+                        st.markdown(f"❌ **Failed Sources**: `{col_data.get('sources_failed', [])}`")
+
+                    st.markdown("---")
+                    st.markdown("#### Retrieved Knowledge Items Breakdown:")
+                    results = col_data.get("results", [])
+                    if not results:
+                        st.info("No items collected.")
+                    else:
+                        for r_idx, item in enumerate(results):
+                            prov = item.get("provider", "unknown")
+                            st_type = item.get("source_type", "general")
+                            title = item.get("title", "Untitled Item")
+                            lat = int(item.get("latency_ms", 0))
+                            summary = item.get("summary", item.get("content", ""))[:200]
+                            url = item.get("url", "")
+                            st.markdown(f"**{r_idx+1}. [{st_type.upper()}] {title}** *(Provider: {prov} | Latency: {lat}ms)*")
+
+                            if summary:
+                                st.markdown(f"> {summary}")
+                            if url:
+                                st.markdown(f"[🔗 Source Link]({url})")
+
+            # Developer-Only Phase 2.4 Knowledge Verification & Evidence Intelligence Panel
+            ver_data = msg.get("metadata", {}).get("verified_collection")
+            if st.session_state.show_trace and ver_data:
+                with st.expander("🔬 Phase 2.4 Knowledge Verification & Evidence Intelligence (Developer Panel)"):
+                    st.markdown(f"**Overall Confidence**: `{int(ver_data.get('overall_confidence', 0)*100)}%` | **Overall Agreement**: `{int(ver_data.get('overall_agreement', 0)*100)}%` | **Latency**: `{int(ver_data.get('total_latency_ms', 0))}ms`")
+                    st.markdown(f"**Summary**: {ver_data.get('verification_summary', 'N/A')}")
+
+                    if ver_data.get("conflicts"):
+                        st.warning(f"⚠️ **Detected Conflicts ({len(ver_data['conflicts'])})**:")
+                        for c in ver_data["conflicts"]:
+                            st.markdown(f"- **{c.get('source_a', 'Source A')}** vs **{c.get('source_b', 'Source B')}**: {c.get('conflict_type', 'Contradiction')}")
+
+                    if ver_data.get("duplicates"):
+                        st.info(f"ℹ️ **Grouped Duplicates ({len(ver_data['duplicates'])})**:")
+                        for d in ver_data["duplicates"]:
+                            st.markdown(f"- **Canonical**: {d.get('canonical_title')} ({d.get('duplicate_count')} duplicate references)")
+
+                    st.markdown("---")
+                    st.markdown("#### Ranked Evidence & Multi-Dimensional Profiles:")
+                    v_results = ver_data.get("verified_results", [])
+                    for r_idx, v_item in enumerate(v_results):
+                        title = v_item.get("title", "Untitled")
+                        prov = v_item.get("provider", "unknown")
+                        v_score = int(v_item.get("verification_score", 0) * 100)
+                        prof = v_item.get("profile", {})
+
+                        st.markdown(f"**{r_idx+1}. {title}** *(Score: {v_score}% | Provider: {prov})*")
+                        if prof:
+                            st.caption(
+                                f"Relevance: {int(prof.get('relevance_score',0)*100)}% | "
+                                f"Credibility: {int(prof.get('credibility_score',0)*100)}% | "
+                                f"Agreement: {int(prof.get('agreement_score',0)*100)}% | "
+                                f"Freshness: {int(prof.get('freshness_score',0)*100)}% | "
+                                f"Educational Value: {int(prof.get('educational_value_score',0)*100)}%"
+                            )
+                        notes = v_item.get("verification_notes", [])
+                        if notes:
+                            st.markdown("  - *Notes*: " + "; ".join(notes))
+
+            # Phase 3 Status-Aware Educational Response & Guided Learning Render
+            edu_res = msg.get("metadata", {}).get("educational_response")
+            resp_status = msg.get("metadata", {}).get("response_status")
+            if not resp_status and isinstance(edu_res, dict):
+                resp_status = edu_res.get("response_status")
+            if not resp_status:
+                resp_status = "SUCCESS" if (edu_res and edu_res.get("ai_explanation")) else "ERROR"
+
+            if edu_res and resp_status == "SUCCESS":
+                with st.expander("🎓 EKIP Educational Response & Guided Learning", expanded=True):
+                    def normalize_confidence(val: Any) -> float:
+                        if val is None:
+                            return 0.0
+                        try:
+                            f_val = float(val)
+                            return round(f_val / 100.0, 4) if f_val > 1.0 else round(max(0.0, min(1.0, f_val)), 4)
+                        except (ValueError, TypeError):
+                            return 0.0
+
+                    conf_pct = int(normalize_confidence(edu_res.get("confidence", 0)) * 100)
+                    raw_agr = edu_res.get("agreement")
+                    agr_str = f"{int(float(raw_agr) * 100)}%" if raw_agr is not None else "N/A"
+                    provs = ", ".join(edu_res.get("providers_used", [])) or "N/A"
+                    st.caption(f"🎯 **Confidence**: {conf_pct}% | 🤝 **Agreement**: {agr_str} | 🌐 **Providers**: `{provs}`")
+
+                    st.markdown("### 🧠 AI Explanation")
+                    st.markdown(edu_res.get("ai_explanation", msg.get("content", "")))
+
+                    def format_link(title_text: str, url_val: Optional[str], action_label: str = "Open Link") -> str:
+                        if url_val and isinstance(url_val, str) and url_val.startswith(("http://", "https://")):
+                            return f"[{title_text}]({url_val})"
+                        return title_text
+
+                    has_any_resources = any(
+                        bool(edu_res.get(k)) for k in ["uploaded_notes", "research", "videos", "code_examples", "books", "trusted_web", "wikipedia"]
+                    )
+
+                    if has_any_resources:
+                        st.markdown("---")
+                        st.markdown("### 📚 Learn More & Recommended Resources")
+
+                        if edu_res.get("uploaded_notes"):
+                            st.markdown("#### 📄 Uploaded Notes & Documents")
+                            for n in edu_res["uploaded_notes"]:
+                                n_title = n.get('title') or n.get('source_file') or "Uploaded Document"
+                                page_info = f" (Page {n.get('page_number', 1)})" if n.get('page_number') else ""
+                                n_desc = n.get('content', '')[:200]
+                                st.markdown(f"- **📄 {n_title}**{page_info}\n  > {n_desc}...")
+
+                        if edu_res.get("research"):
+                            st.markdown("#### 📚 Research Papers")
+                            for paper in edu_res["research"]:
+                                p_title = paper.get("title", "Research Paper")
+                                p_url = paper.get("url")
+                                p_link = format_link(p_title, p_url, "Read Paper →")
+                                authors = paper.get("authors")
+                                auth_str = f" by *{', '.join(authors) if isinstance(authors, list) else authors}*" if authors else ""
+                                date_str = f" ({paper.get('published_date')})" if paper.get("published_date") else ""
+                                prov_str = f" `[{paper.get('provider', 'arXiv/Scholar')}]`"
+                                desc_str = f"\n  > {paper.get('snippet', paper.get('content', ''))[:220]}..." if (paper.get("snippet") or paper.get("content")) else ""
+                                st.markdown(f"- **{p_link}**{auth_str}{date_str}{prov_str}{desc_str}")
+
+                        if edu_res.get("videos"):
+                            st.markdown("#### 🎥 Recommended Videos")
+                            for v in edu_res["videos"]:
+                                v_title = v.get("title", "Educational Video")
+                                if v_title.startswith("Video: "):
+                                    v_title = v_title[7:]
+                                v_url = v.get("url") or v.get("metadata", {}).get("video_url")
+                                v_link = format_link(v_title, v_url, "Watch Video →")
+                                chan = v.get("channel_name") or (v.get("authors")[0] if (isinstance(v.get("authors"), list) and v.get("authors")) else None)
+                                chan_str = f" — *Channel: {chan}*" if chan else ""
+                                desc = v.get("description") or v.get("content", "")[:180]
+                                desc_str = f"\n  > {desc}..." if desc else ""
+                                st.markdown(f"- **{v_link}**{chan_str}{desc_str}")
+
+                        if edu_res.get("code_examples"):
+                            st.markdown("#### 💻 GitHub Resources")
+                            for repo in edu_res["code_examples"]:
+                                r_title = repo.get("title", "GitHub Repository")
+                                r_url = repo.get("url")
+                                r_link = format_link(r_title, r_url, "View Repository →")
+                                stars = repo.get("star_count") or repo.get("metadata", {}).get("stars")
+                                star_str = f" ⭐ **{stars:,} stars**" if (stars is not None and isinstance(stars, int)) else f" ⭐ {stars} stars" if stars else ""
+                                desc = repo.get("content", "")[:200]
+                                desc_str = f"\n  > {desc}..." if desc else ""
+                                st.markdown(f"- **{r_link}**{star_str}{desc_str}")
+
+                        if edu_res.get("books"):
+                            st.markdown("#### 📖 Recommended Books")
+                            for b in edu_res["books"]:
+                                b_title = b.get("title", "Book Recommendation")
+                                b_url = b.get("url")
+                                b_link = format_link(b_title, b_url, "View Book →")
+                                authors = b.get("authors")
+                                auth_str = f" by *{', '.join(authors) if isinstance(authors, list) else authors}*" if authors else ""
+                                date_str = f" ({b.get('published_date')})" if b.get("published_date") else ""
+                                desc = b.get("content", "")[:200]
+                                desc_str = f"\n  > {desc}..." if desc else ""
+                                st.markdown(f"- **{b_link}**{auth_str}{date_str}{desc_str}")
+
+                        if edu_res.get("trusted_web") or edu_res.get("wikipedia"):
+                            st.markdown("#### 🌐 Reference & Web Sources")
+                            all_web = edu_res.get("trusted_web", []) + edu_res.get("wikipedia", [])
+                            for w in all_web:
+                                w_title = w.get("title", "Web Source")
+                                w_url = w.get("url")
+                                w_link = format_link(w_title, w_url, "Open Source →")
+                                prov_str = f" `[{w.get('provider', 'web')}]`"
+                                desc = w.get("snippet") or w.get("content", "")[:200]
+                                desc_str = f"\n  > {desc}..." if desc else ""
+                                st.markdown(f"- **{w_link}**{prov_str}{desc_str}")
+
+                    if edu_res.get("conflicts"):
+                        st.markdown("---")
+                        st.warning("#### ⚠️ Conflicting Information Detected")
+                        for c in edu_res["conflicts"]:
+                            st.markdown(f"- **{c.get('source_a')}** vs **{c.get('source_b')}**: {c.get('conflict_type')}")
+
+                    if edu_res.get("learning_summary"):
+                        st.markdown("---")
+                        st.success(f"**✅ Final Learning Summary**: {edu_res['learning_summary']}")
+
+                    if edu_res.get("key_takeaways"):
+                        st.markdown("#### 📌 Key Takeaways")
+                        for kt in edu_res["key_takeaways"]:
+                            st.markdown(f"- {kt}")
+
+                    if edu_res.get("important_terms"):
+                        st.markdown("#### 📖 Important Terms (Glossary)")
+                        for term, defn in edu_res["important_terms"].items():
+                            st.markdown(f"- **{term}**: {defn}")
+
+                    if edu_res.get("guided_questions"):
+                        st.markdown("---")
+                        st.markdown("#### 💡 Guided Learning — Recommended Next Questions")
+                        g_cols = st.columns(len(edu_res["guided_questions"]))
+                        for g_idx, g_q in enumerate(edu_res["guided_questions"]):
+                            if g_cols[g_idx % len(g_cols)].button(f"❓ {g_q}", key=f"gq_{msg.get('id', idx)}_{g_idx}"):
+                                st.session_state.next_query = g_q
+                                st.rerun()
+
+                    lpath = edu_res.get("learning_path")
+                    if lpath and isinstance(lpath, dict) and (lpath.get("prerequisites") or lpath.get("next_topics") or lpath.get("advanced_topics")):
+                        st.markdown("---")
+                        st.markdown(f"#### 🗺️ Structured Learning Path: *{lpath.get('current_topic', 'Topic')}*")
+                        p1, p2, p3, p4 = st.columns(4)
+                        with p1:
+                            st.markdown("**1. Prerequisites**")
+                            for pre in lpath.get("prerequisites", []):
+                                st.caption(f"• {pre}")
+                        with p2:
+                            st.markdown("**2. Current Topic**")
+                            st.caption(f"▶ **{lpath.get('current_topic')}**")
+                        with p3:
+                            st.markdown("**3. Next Topics**")
+                            for nxt in lpath.get("next_topics", []):
+                                st.caption(f"• {nxt}")
+                        with p4:
+                            st.markdown("**4. Advanced**")
+                            for adv in lpath.get("advanced_topics", []):
+                                st.caption(f"• {adv}")
+            elif resp_status == "INSUFFICIENT_EVIDENCE":
+                st.info("ℹ️ **Notice**: Educational scaffolding suppressed due to insufficient document evidence.")
+
+
+
+
+
             # Feedback Options for Assistant Messages
             if msg["role"] == "assistant" and msg.get("id"):
                 f_col1, f_col2, _ = st.columns([1, 1, 8])
@@ -287,11 +654,26 @@ if page == "💬 Chat":
                     st.toast("Feedback recorded: 👎", icon="📝")
 
     # User Input Handling
-    user_input = st.chat_input("Ask about your documents...")
-    if user_input:
-        prompt = user_input
+    next_query = st.session_state.pop("next_query", None)
+    if next_query:
+        prompt = next_query
+    else:
+        user_input = st.chat_input("Ask about your documents, topics, or concepts...")
+        st.markdown('<div class="input-hint-text">↵ to send · Shift + ↵ for new line · Supports PDF, DOCX, TXT</div>', unsafe_allow_html=True)
+        if user_input:
+            prompt = user_input
 
     if prompt:
+        from ui.chat_sidebar import on_first_message
+        from core.chat.database import save_message, increment_message_count, update_chat_preview
+        
+        on_first_message(prompt)
+        active_id = st.session_state.get("active_chat_id")
+        if active_id:
+            save_message(active_id, "user", prompt)
+            increment_message_count(active_id)
+            update_chat_preview(active_id, prompt)
+
         # Display User Message
         st.session_state.messages.append({"role": "user", "content": prompt})
         with st.chat_message("user"):
@@ -303,23 +685,76 @@ if page == "💬 Chat":
             placeholder.markdown("🧠 *Agents collaborating...*")
 
             history = st.session_state.messages[:-1]
+            # 🧠 Phase 2.2 LangGraph Knowledge Planner Execution (Zero Network / Zero Retrieval)
+            from graph.builder import create_ekip_planning_graph
+            planning_graph = create_ekip_planning_graph()
+            plan_state = planning_graph.invoke({
+                "question": prompt,
+                "conversation_history": history,
+                "execution_mode": "chat_planning",
+                "skip_synthesis": True,
+            })
+            exec_plan = plan_state.get("execution_plan") if isinstance(plan_state, dict) else getattr(plan_state, "execution_plan", None)
+            prov_meta = plan_state.get("provider_metadata", {}) if isinstance(plan_state, dict) else getattr(plan_state, "provider_metadata", {})
+            edu_meta = prov_meta.get("educational_response") if isinstance(prov_meta, dict) else None
+            if not edu_meta:
+                edu_meta = plan_state.get("educational_response") if isinstance(plan_state, dict) else getattr(plan_state, "educational_response", None)
+            if hasattr(edu_meta, "dict"):
+                edu_meta = edu_meta.dict()
+
+            # Record planner telemetry safely
+            try:
+                memory.record_planner_telemetry(prompt, exec_plan.dict() if exec_plan else {})
+            except Exception as tel_err:
+                logger.warning(f"Failed to record planner telemetry: {tel_err}")
+
             ctx = {
                 "query": prompt,
                 "history": history,
                 "filters": {},
                 "stream_writer": placeholder.write_stream,
+                "execution_plan": exec_plan,
+                "educational_response": edu_meta,
+                "plan_state": plan_state,
             }
 
             t0 = time.time()
 
             try:
                 result = orch.run(ctx)
+                if exec_plan:
+                    result.metadata["execution_plan"] = exec_plan.dict()
+                col_meta = prov_meta.get("knowledge_collection") if isinstance(prov_meta, dict) else None
+                if col_meta:
+                    result.metadata["knowledge_collection"] = col_meta
+                    try:
+                        memory.record_collection_telemetry(prompt, col_meta)
+                    except Exception as col_err:
+                        logger.warning(f"Failed to record collection telemetry: {col_err}")
+                ver_meta = prov_meta.get("verified_collection") if isinstance(prov_meta, dict) else getattr(plan_state, "verified_collection", None)
+                if ver_meta:
+                    result.metadata["verified_collection"] = ver_meta
+                    try:
+                        memory.record_verification_telemetry(prompt, ver_meta)
+                    except Exception as ver_err:
+                        logger.warning(f"Failed to record verification telemetry: {ver_err}")
+                edu_meta = result.metadata.get("educational_response") or edu_meta
+                if edu_meta:
+                    result.metadata["educational_response"] = edu_meta
+                    try:
+                        memory.record_synthesis_telemetry(prompt, edu_meta)
+                    except Exception as edu_err:
+                        logger.warning(f"Failed to record synthesis telemetry: {edu_err}")
+
                 placeholder.markdown(result.content)
+
+
             except Exception as e:
+
+
                 logger.error(f"Orchestrator execution error: {e}", exc_info=True)
                 clean_err = (
-                    "The AI service is temporarily unavailable. "
-                    "Your documents were searched successfully. "
+                    f"The AI service encountered an execution issue: {str(e)}. "
                     "Please try again later."
                 )
                 from agents.base import AgentResult
@@ -335,6 +770,7 @@ if page == "💬 Chat":
                         "fallback_occurred": False,
                         "fallback_chain": ["NONE"],
                         "error": clean_err,
+                        "source_mode": "none",
                     }
                 )
                 placeholder.markdown(result.content)
@@ -349,7 +785,7 @@ if page == "💬 Chat":
             st.markdown(render_llm_telemetry_pill(result.metadata), unsafe_allow_html=True)
 
             # Sources
-            if result.sources:
+            if result.sources and result.metadata.get("response_status") == "SUCCESS":
                 with st.expander("📎 Retrieved Sources"):
                     for s in result.sources:
                         st.markdown(render_source_card(s), unsafe_allow_html=True)
@@ -377,6 +813,20 @@ if page == "💬 Chat":
             except Exception as mem_err:
                 logger.warning(f"Failed to persist message to SQLite memory: {mem_err}")
 
+            active_id = st.session_state.get("active_chat_id") or st.session_state.get("conversation_id")
+            if active_id:
+                from core.chat.database import save_message, increment_message_count
+                save_message(
+                    active_id,
+                    "assistant",
+                    result.content,
+                    citations=result.sources,
+                    agent_trace=result.agent_trace,
+                    confidence=result.confidence,
+                    metadata=result.metadata,
+                )
+                increment_message_count(active_id)
+
             # Save to Session State
             st.session_state.messages.append({
                 "role": "assistant",
@@ -386,12 +836,315 @@ if page == "💬 Chat":
                 "confidence": result.confidence,
                 "metadata": result.metadata,
             })
+            st.rerun()
 
 
-# ─── 5. PAGE B: 📊 ANALYTICS ───
+
+
+
+# ─── 5. PAGE B: 🎓 STUDENT WORKSPACE ───
+elif page == "🎓 Student Workspace":
+    from ui.workspace import render_student_workspace
+    user_obj = st.session_state.get("user", {}) or {}
+    render_student_workspace(user_obj, engine)
+
+    st.markdown('<div style="height: 24px;"></div>', unsafe_allow_html=True)
+    st.markdown("---")
+    st.markdown("### 📚 Subject Notebooks & Study Tools")
+    st.caption("Organize your learning into persistent sessions, subject notebooks, bookmarks, study collections & exports.")
+
+    from core.workspace import workspace_manager, export_engine
+
+    prog = workspace_manager.get_progress()
+
+    # Progress KPI Metrics
+    m1, m2, m3, m4, m5 = st.columns(5)
+    m1.metric("Queries Asked", prog.total_queries)
+    m2.metric("Notebooks", prog.notebooks_count)
+    m3.metric("Saved Notes", prog.saved_notes_count)
+    m4.metric("Bookmarks", f"{prog.read_bookmarks_count}/{prog.bookmarks_count}")
+    m5.metric("Collections", prog.collections_count)
+
+    st.markdown("---")
+
+    ws_tab1, ws_tab2, ws_tab3, ws_tab4, ws_tab5, ws_tab6, ws_tab7 = st.tabs([
+        "📚 Notebooks",
+        "📝 Saved Notes Library",
+        "📂 Study Collections",
+        "🔖 Bookmarks",
+        "🔍 Smart Search",
+        "🕒 Sessions & Timeline",
+        "🧩 Learning Modules",
+    ])
+
+
+    with ws_tab1:
+        st.markdown("### 📚 Subject Notebooks")
+        c_nb1, c_nb2 = st.columns([1, 2])
+        with c_nb1:
+            st.markdown("#### Create New Notebook")
+            nb_title = st.text_input("Notebook Title", key="nb_title_in")
+            nb_desc = st.text_area("Description", key="nb_desc_in")
+            if st.button("Create Notebook", key="btn_create_nb"):
+                if nb_title:
+                    nb = workspace_manager.create_notebook(nb_title, nb_desc)
+                    st.success(f"Created Notebook '{nb.title}'!")
+                    st.rerun()
+
+        with c_nb2:
+            st.markdown("#### Existing Notebooks")
+            notebooks = workspace_manager.list_notebooks()
+            if not notebooks:
+                st.info("No notebooks created yet.")
+            for nb in notebooks:
+                with st.expander(f"📚 {nb.title} ({len(nb.notes)} notes)"):
+                    st.caption(nb.description or "No description.")
+                    if nb.notes:
+                        for n in nb.notes:
+                            st.markdown(f"- **{n.title}**: {n.ai_explanation[:120]}...")
+                        nb_md = export_engine.export_notebook_to_markdown(nb)
+                        st.download_button(f"📥 Export Notebook (Markdown)", nb_md, f"{nb.title}.md", "text/markdown", key=f"dl_nb_{nb.id}")
+
+    with ws_tab2:
+        st.markdown("### 📝 Saved Notes Library & Exports")
+        notes = workspace_manager.get_notes_for_notebook("") + [n for nb in workspace_manager.list_notebooks() for n in nb.notes]
+        if not notes:
+            st.info("No saved study notes in workspace yet. Ask questions in chat to persist study notes automatically!")
+        for n in notes:
+            with st.expander(f"📝 {n.title}"):
+                st.markdown(f"**Query**: *{n.query}*")
+                st.markdown(n.ai_explanation)
+                if n.key_takeaways:
+                    st.markdown("**Key Takeaways:**")
+                    for kt in n.key_takeaways:
+                        st.markdown(f"- {kt}")
+                exp_col1, exp_col2, exp_col3 = st.columns(3)
+                md_bytes = export_engine.export_to_markdown(n)
+                txt_bytes = export_engine.export_to_txt(n)
+                docx_bytes = export_engine.export_to_docx(n)
+                exp_col1.download_button("📥 Markdown (.md)", md_bytes, f"{n.id}.md", "text/markdown", key=f"dl_note_md_{n.id}")
+                exp_col2.download_button("📥 Text (.txt)", txt_bytes, f"{n.id}.txt", "text/plain", key=f"dl_note_txt_{n.id}")
+                exp_col3.download_button("📥 DOCX (.docx)", docx_bytes, f"{n.id}.docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", key=f"dl_note_docx_{n.id}")
+
+    with ws_tab3:
+        st.markdown("### 📂 Study Collections")
+        cols = workspace_manager.list_collections()
+        c_col1, c_col2 = st.columns([1, 2])
+        with c_col1:
+            st.markdown("#### Create Study Collection")
+            col_title = st.text_input("Collection Title", key="col_title_in")
+            col_cat = st.selectbox("Category", ["Papers", "Videos", "Books", "Vocabulary", "General"], key="col_cat_in")
+            if st.button("Create Collection", key="btn_create_col"):
+                if col_title:
+                    workspace_manager.create_collection(col_title, col_cat)
+                    st.success(f"Created Collection '{col_title}'!")
+                    st.rerun()
+
+        with c_col2:
+            st.markdown("#### Existing Collections")
+            if not cols:
+                st.info("No study collections created yet.")
+            for c in cols:
+                with st.expander(f"📂 {c.title} ({c.category})"):
+                    st.caption(f"Items count: {len(c.items)}")
+
+    with ws_tab4:
+        st.markdown("### 🔖 Resource Bookmarks")
+        bm_col1, bm_col2 = st.columns([1, 2])
+        with bm_col1:
+            st.markdown("#### Add New Bookmark")
+            bm_title = st.text_input("Resource Title", key="bm_title_in")
+            bm_type = st.selectbox("Resource Type", ["paper", "book", "video", "repo", "article"], key="bm_type_in")
+            bm_url = st.text_input("URL", key="bm_url_in")
+            if st.button("Add Bookmark", key="btn_add_bm"):
+                if bm_title:
+                    workspace_manager.add_bookmark(bm_title, bm_type, bm_url)
+                    st.success(f"Bookmarked '{bm_title}'!")
+                    st.rerun()
+
+        with bm_col2:
+            st.markdown("#### Saved Bookmarks")
+            bms = workspace_manager.list_bookmarks()
+            if not bms:
+                st.info("No bookmarks saved yet.")
+            for bm in bms:
+                st_str = "✅ Read" if bm.is_read else "📖 Unread"
+                col_bm1, col_bm2 = st.columns([3, 1])
+                col_bm1.markdown(f"- [{bm.title}]({bm.url or '#'}) *({bm.resource_type.upper()})* — `{st_str}`")
+                if col_bm2.button("Toggle Read", key=f"tog_bm_{bm.id}"):
+                    workspace_manager.toggle_bookmark_read(bm.id)
+                    st.rerun()
+
+    with ws_tab5:
+        st.markdown("### 🔍 Smart Workspace Search")
+        sq = st.text_input("Search workspace notes, notebooks, bookmarks...", key="ws_search_in")
+        if sq:
+            s_res = workspace_manager.smart_search(sq)
+            st.markdown(f"#### Search Results for '{sq}':")
+            st.markdown(f"**Notes Found**: {len(s_res['notes'])}")
+            for n in s_res["notes"]:
+                st.markdown(f"- 📝 **{n['title']}**: *{n['query']}*")
+            st.markdown(f"**Notebooks Found**: {len(s_res['notebooks'])}")
+            for nb in s_res["notebooks"]:
+                st.markdown(f"- 📚 **{nb['title']}**: {nb['description']}")
+            st.markdown(f"**Bookmarks Found**: {len(s_res['bookmarks'])}")
+            for bm in s_res["bookmarks"]:
+                st.markdown(f"- 🔖 **{bm['title']}** ({bm['url']})")
+
+    with ws_tab6:
+        st.markdown("### 🕒 Learning Sessions & Timeline")
+        s_col1, s_col2 = st.columns([1, 2])
+        with s_col1:
+            st.markdown("#### Create Learning Session")
+            s_title = st.text_input("Session Title", key="sess_title_in")
+            s_desc = st.text_area("Session Description", key="sess_desc_in")
+            if st.button("Create Session", key="btn_create_sess"):
+                if s_title:
+                    workspace_manager.create_session(s_title, s_desc)
+                    st.success(f"Created Session '{s_title}'!")
+                    st.rerun()
+
+        with s_col2:
+            st.markdown("#### Learning Timeline")
+            sessions = workspace_manager.list_sessions()
+            if not sessions:
+                st.info("No learning sessions created yet.")
+            for s in sessions:
+                st.markdown(f"🗓️ **{s.title}** ({s.query_count} queries asked)")
+                st.caption(s.description or "No description.")
+                st.markdown("---")
+
+    with ws_tab7:
+        st.markdown("### 🧩 Adaptive Learning Modules & AI Study Assistant")
+        st.caption("Active learning plugins: Flashcards, Quizzes, Mind Maps, Revision Guides, Interview Prep, Coding Practice & Research Assistant.")
+
+        from core.workspace.modules import module_manager
+        from core.models.synthesis import EducationalResponse
+
+        mod_list = module_manager.list_modules()
+        st.markdown(f"**Registered Learning Modules**: `{len(mod_list)} Active Plugins`")
+
+        sample_resp = EducationalResponse(
+            query="Neural Networks and Deep Learning",
+            educational_mode="detailed_explanation",
+            ai_explanation="Neural networks are computational models composed of layered artificial neurons designed to recognize patterns in data using backpropagation.",
+            key_takeaways=[
+                "Backpropagation calculates loss gradients via chain rule",
+                "Activation functions introduce non-linearity into representations",
+                "Deep architectures require regularized weights to prevent overfitting",
+            ],
+            important_terms={
+                "Backpropagation": "Gradient calculation algorithm across network weights",
+                "Activation Function": "Non-linear transformation function applied at nodes",
+            },
+            learning_summary="Deep neural networks learn non-linear representations using gradient descent.",
+            confidence=0.92,
+            agreement=0.95,
+            providers_used=["semantic_scholar", "wikipedia"],
+        )
+
+        mod_sub1, mod_sub2, mod_sub3, mod_sub4, mod_sub5, mod_sub6, mod_sub7 = st.tabs([
+            "📇 Flashcards",
+            "📝 Quiz",
+            "🧠 Mind Map",
+            "📖 Revision",
+            "💼 Interview Prep",
+            "💻 Coding Practice",
+            "🔬 Research Assistant",
+        ])
+
+        with mod_sub1:
+            fc_mod = module_manager.get_module("flashcards")
+            if fc_mod:
+                out = fc_mod.process(sample_resp)
+                st.caption(f"🎯 Difficulty Level: `{out.get('difficulty_level', 'medium').upper()}` | Cards Generated: `{out.get('flashcard_count')}`")
+                for fc in out.get("flashcards", []):
+                    st.markdown(f"**[{fc['type'].upper()}] Card ({fc['difficulty']})**")
+                    st.info(f"**Q**: {fc['front']}")
+                    st.success(f"**A**: {fc['back']}")
+                    st.markdown("---")
+
+        with mod_sub2:
+            qz_mod = module_manager.get_module("quizgenerator")
+            if qz_mod:
+                out = qz_mod.process(sample_resp)
+                st.caption(f"🎯 Difficulty: `{out.get('difficulty_level', 'intermediate').upper()}` | Questions: `{out.get('total_questions')}`")
+                for idx, q in enumerate(out.get("quiz_questions", []), 1):
+                    st.markdown(f"**Question {idx} [{q['type'].upper()}]** ({q['difficulty']})")
+                    st.markdown(f"❓ {q['question']}")
+                    if "options" in q:
+                        for opt in q["options"]:
+                            st.caption(f"- {opt}")
+                    st.success(f"💡 **Explanation**: {q['explanation']}")
+                    st.markdown("---")
+
+        with mod_sub3:
+            mm_mod = module_manager.get_module("mindmap")
+            cg_mod = module_manager.get_module("conceptgraph")
+            if mm_mod:
+                out_mm = mm_mod.process(sample_resp)
+                st.markdown("#### 🧠 Hierarchical Mind Map Tree")
+                st.json(out_mm.get("mind_map_tree", {}))
+            if cg_mod:
+                out_cg = cg_mod.process(sample_resp)
+                st.markdown("#### 🌐 Concept Relationship Graph Nodes")
+                st.json(out_cg.get("graph", {}))
+
+        with mod_sub4:
+            rev_mod = module_manager.get_module("revisionassistant")
+            if rev_mod:
+                out = rev_mod.process(sample_resp)
+                st.markdown(out.get("one_page_revision", ""))
+                st.markdown("---")
+                st.markdown("#### ⚡ Exam Cheat Sheet")
+                st.code(out.get("cheat_sheet", ""), language="markdown")
+
+        with mod_sub5:
+            iv_mod = module_manager.get_module("interviewprep")
+            if iv_mod:
+                out = iv_mod.process(sample_resp)
+                st.markdown("#### 💼 Technical Interview Questions & Rubrics")
+                for q in out.get("common_questions", []):
+                    st.markdown(f"**Q**: {q['question']}")
+                    st.success(f"**Expected Answer**: {q['expected_answer']}")
+                    st.warning(f"**Follow-Up Probe**: {q['follow_up']}")
+                st.markdown("#### Evaluation Rubric")
+                st.json(out.get("evaluation_rubric", {}))
+
+        with mod_sub6:
+            cd_mod = module_manager.get_module("codingpractice")
+            if cd_mod:
+                out = cd_mod.process(sample_resp)
+                st.markdown("#### 💻 Programming Exercises & Complexity Analysis")
+                for ch in out.get("coding_challenges", []):
+                    st.markdown(f"### {ch['title']}")
+                    st.caption(f"Time: {ch['time_complexity']} | Space: {ch['space_complexity']}")
+                    st.markdown(f"**Problem**: {ch['problem_statement']}")
+                    st.code(ch["sample_solution"], language="python")
+
+        with mod_sub7:
+            rs_mod = module_manager.get_module("researchassistant")
+            if rs_mod:
+                out = rs_mod.process(sample_resp)
+                st.markdown("#### 🔬 Academic Research Gaps & Future Work")
+                st.markdown("**Research Gaps:**")
+                for rg in out.get("research_gaps", []):
+                    st.markdown(f"- ⚠️ {rg}")
+                st.markdown("**Future Directions:**")
+                for fw in out.get("future_work", []):
+                    st.markdown(f"- 🚀 {fw}")
+
+
+
+# ─── 6. PAGE C: 📊 ANALYTICS ───
 elif page == "📊 Analytics":
-    st.title("📊 Enterprise Query Analytics & Observability")
-    st.markdown("Actionable telemetry monitoring agent routing, confidence, faithfulness, and CRAG triggers.")
+    from ui.analytics import render_analytics_page
+    user_obj = st.session_state.get("user", {}) or {}
+    render_analytics_page(user_obj, engine)
+
+    st.markdown('<div style="height: 24px;"></div>', unsafe_allow_html=True)
+    st.markdown("---")
+    st.markdown("### 🔬 System Observability & Telemetry Details")
 
     total_q = memory.get_total_queries()
     avg_conf = memory.get_avg_confidence()
@@ -477,7 +1230,13 @@ elif page == "📊 Analytics":
 
 # ─── 6. PAGE C: 📚 DOCUMENTS ───
 elif page == "📚 Documents":
-    st.title("📚 Document Repository & Ingestion Manager")
+    from ui.documents import render_documents_page
+    user_obj = st.session_state.get("user", {}) or {}
+    render_documents_page(user_obj, engine)
+
+    st.markdown('<div style="height: 24px;"></div>', unsafe_allow_html=True)
+    st.markdown("---")
+    st.markdown("### 📋 System Vector Store Ingestion Manager")
 
     # Ingestion Card
     with st.expander("📤 Upload & Ingest New Documents", expanded=True):
@@ -542,8 +1301,13 @@ elif page == "📚 Documents":
 
 # ─── 7. PAGE D: 🩺 LLM HEALTH & DIAGNOSTICS ───
 elif page == "🩺 LLM Health & Diagnostics":
-    st.title("🩺 Multi-LLM Subsystem Health & Diagnostics")
-    st.caption("Real-time provider status, active models, latency, and failover diagnostics across Gemini, Groq, Cohere, and Mistral")
+    from ui.llm_health import render_llm_health_page
+    user_obj = st.session_state.get("user", {}) or {}
+    render_llm_health_page(user_obj, engine)
+
+    st.markdown('<div style="height: 24px;"></div>', unsafe_allow_html=True)
+    st.markdown("---")
+    st.markdown("### 🔧 Provider Manager & Failover Configuration")
 
     from core.llm import LLMManager, ProviderStatus
     llm_mgr = LLMManager(Config)
@@ -558,10 +1322,10 @@ elif page == "🩺 LLM Health & Diagnostics":
     c1, c2, c3, c4 = st.columns(4)
 
     providers_info = [
-        ("🔵 Gemini (Primary)", "gemini", c1),
-        ("⚡ Groq (Fallback 1)", "groq", c2),
-        ("🟢 Cohere (Fallback 2)", "cohere", c3),
-        ("🟠 Mistral (Fallback 3)", "mistral", c4),
+        ("⚡ Groq (Primary)", "groq", c1),
+        ("🔵 Gemini (Fallback 1)", "gemini", c2),
+        ("🟠 Mistral (Fallback 2)", "mistral", c3),
+        ("🟢 Cohere (Fallback 3)", "cohere", c4),
     ]
 
     for title, key, col in providers_info:
@@ -584,8 +1348,102 @@ elif page == "🩺 LLM Health & Diagnostics":
                 st.error("No health data available.")
 
     st.markdown("---")
+    st.subheader("🌐 Phase 2 Multi-Domain Knowledge Provider Registry")
+    st.caption("Categorized infrastructure registry monitoring active and future educational knowledge providers")
+
+    from core.providers import provider_registry
+    if st.button("🔍 Run Full Diagnostic Audit Across All 14 Providers", key="audit_all_providers"):
+        with st.spinner("Auditing General AI, Search, Extraction, Academic, Media, Books, and Repositories..."):
+            provider_reports = provider_registry.run_all_health_checks()
+        st.toast("Completed full registry diagnostic audit!", icon="🚀")
+
+    diag_summary = provider_registry.get_diagnostics_summary()
+
+    category_mapping = {
+        "General AI": ["gemini", "groq", "cohere", "mistral"],
+        "Web Search": ["tavily", "duckduckgo"],
+        "Content Extraction & Reader": ["firecrawl", "jina"],
+        "Academic Literature & Reference": ["semantic_scholar", "arxiv", "wikipedia"],
+        "Educational Media & Books": ["youtube", "google_books"],
+        "Repositories & Code": ["github"],
+    }
+
+    for cat_name, provider_keys in category_mapping.items():
+        with st.expander(f"📁 {cat_name} Providers ({len(provider_keys)})", expanded=True):
+            table_data = []
+            for name in provider_keys:
+                info = diag_summary.get(name, {})
+                if not info:
+                    continue
+                masked_key = Config.get_masked_key(name)
+                is_cfg = Config.is_provider_configured(name)
+                status_label = info.get("status", "Unknown")
+                if is_cfg and status_label in ("Ready (Not yet used)", "Available"):
+                    status_display = "🟢 Configured (Ready)"
+                elif status_label == "Public API":
+                    status_display = "🌐 Public Open Access"
+                elif is_cfg:
+                    status_display = f"🟡 {status_label}"
+                else:
+                    status_display = "⚪ Not Configured (Optional)"
+
+                table_data.append({
+                    "Provider": info.get("name", name).upper(),
+                    "Status": status_display,
+                    "Configured": "YES" if is_cfg else "NO",
+                    "Credentials / Access": masked_key,
+                    "Latency": f"{info.get('latency_ms', 0.0)} ms",
+                    "Intended Role": info.get("error") or "Registered (Ready for Phase 2 workflows)",
+                })
+            st.dataframe(pd.DataFrame(table_data), use_container_width=True)
+
+    st.markdown("---")
     st.subheader("⚙️ System Environment Audit")
     col_a, col_b, col_c = st.columns(3)
     col_a.metric("Timeout Budget", f"{getattr(Config, 'LLM_MAX_WAIT_SECONDS', getattr(Config, 'LLM_TIMEOUT_SECONDS', 2.0))}s")
     col_b.metric("Max Retries", f"{getattr(Config, 'LLM_MAX_RETRIES', 0)}")
     col_c.metric("Embedding Model", getattr(Config, "EMBEDDING_MODEL", "sentence-transformers/all-MiniLM-L6-v2"))
+
+    st.markdown("---")
+    st.subheader("⚡ Enterprise Performance, Caching & Reliability Dashboard (Phase 2.8)")
+    st.caption("Real-time telemetry on multi-level cache hit ratios, background jobs, circuit breakers, and event bus activities.")
+
+    from core.cache import cache_manager
+    from core.jobs import job_queue
+    from core.reliability import health_monitor
+
+    p_col1, p_col2, p_col3, p_col4 = st.columns(4)
+
+    cache_stats = cache_manager.get_all_stats()
+    total_hits = sum(s["hits"] for s in cache_stats.values())
+    total_misses = sum(s["misses"] for s in cache_stats.values())
+    overall_ratio = round((total_hits / (total_hits + total_misses)) * 100, 2) if (total_hits + total_misses) > 0 else 0.0
+
+    p_col1.metric("Cache Hit Ratio", f"{overall_ratio}%")
+    p_col2.metric("Cache Hits", total_hits)
+    p_col3.metric("Cache Misses", total_misses)
+    p_col4.metric("Active Background Jobs", len(job_queue.list_jobs()))
+
+    st.markdown("#### 💾 Multi-Level Cache Tier Statistics")
+    cache_df = pd.DataFrame([
+        {
+            "Namespace": ns,
+            "Current Entries": info["size"],
+            "Max Entries": info["max_size"],
+            "Hits": info["hits"],
+            "Misses": info["misses"],
+            "Hit Ratio": f"{info['hit_ratio']}%",
+        }
+        for ns, info in cache_stats.items()
+    ])
+    st.dataframe(cache_df, use_container_width=True)
+
+    st.markdown("#### ⚙️ Background Worker Queue Status")
+    jobs = job_queue.list_jobs()
+    if not jobs:
+        st.info("No background jobs recorded in worker queue.")
+    else:
+        st.dataframe(pd.DataFrame(jobs), use_container_width=True)
+
+
+

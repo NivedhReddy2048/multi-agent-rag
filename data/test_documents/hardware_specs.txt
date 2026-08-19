@@ -1,0 +1,5 @@
+The server contains 32 CPU cores.
+RAM capacity is 128 GB.
+Storage capacity is 2 TB.
+Network interface speed is 10 Gbps.
+The system does NOT contain a dedicated GPU.

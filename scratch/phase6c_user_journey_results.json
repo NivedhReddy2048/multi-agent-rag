@@ -1,0 +1,1093 @@
+{
+  "C1": {
+    "query": "Explain the main concepts in this document.",
+    "doc_filter": [
+      "doc_a_architecture_overview.txt"
+    ],
+    "exec_plan": {
+      "intent": "concept_explanation",
+      "difficulty": "intermediate",
+      "source_strategy": "document_only",
+      "selected_sources": [
+        "internal_document"
+      ],
+      "retrieval_strategy": "internal_only",
+      "expected_output": "detailed_explanation",
+      "estimated_latency": "low",
+      "estimated_cost": "low",
+      "reasoning": "Plan for 'Explain the main concepts in this docume...': Intent=concept_explanation, SourceStrategy=document_only, TargetDocs=[], Sources=['internal_document'].",
+      "reasoning_steps": [
+        "Intent Classification: 'concept_explanation' \u2014 Default educational intent: concept explanation.",
+        "Difficulty Estimation: 'intermediate' \u2014 Default intermediate educational difficulty.",
+        "Source Strategy Selection: 'document_only' \u2014 User explicitly requested knowledge retrieval strictly from uploaded documents.",
+        "Knowledge Source Selection: ['internal_document'] \u2014 Selected internal documents exclusively for user document query.",
+        "Retrieval Strategy: 'internal_only' \u2014 Strategy set to Internal Only for document-grounded query.",
+        "Expected Output Format: 'detailed_explanation'"
+      ],
+      "requires_internal_documents": true,
+      "requires_external_search": false,
+      "requires_research": false,
+      "requires_books": false,
+      "requires_videos": false,
+      "requires_code": false,
+      "target_documents": [],
+      "metadata": {
+        "query": "Explain the main concepts in this document.",
+        "history_len": 0
+      }
+    },
+    "result_content": "",
+    "confidence": 0,
+    "response_status": "INSUFFICIENT_EVIDENCE",
+    "source_mode": "documents",
+    "provider": "NONE",
+    "model": "none",
+    "retrieved_chunks_count": 1,
+    "citations_count": 1,
+    "educational_response": {
+      "query": "",
+      "educational_mode": "detailed_explanation",
+      "ai_explanation": "",
+      "uploaded_notes": [],
+      "trusted_web": [],
+      "wikipedia": [],
+      "research": [],
+      "books": [],
+      "videos": [],
+      "code_examples": [],
+      "key_takeaways": [],
+      "important_terms": {},
+      "learning_summary": "Insufficient document evidence found for query.",
+      "conflicts": [],
+      "guided_questions": [],
+      "learning_path": null,
+      "citations": [],
+      "providers_used": [],
+      "confidence": 0.0,
+      "agreement": 0.0,
+      "synthesis_metadata": {
+        "response_status": "INSUFFICIENT_EVIDENCE",
+        "authoritative": true,
+        "provider": "NONE",
+        "model": "none",
+        "total_sources": 1,
+        "faithfulness": 0.0,
+        "faithfulness_applicable": true,
+        "faithfulness_reason": "empty_synthesis_output"
+      },
+      "response_status": "INSUFFICIENT_EVIDENCE"
+    },
+    "latency_ms": 32885.39,
+    "agent_trace": [
+      "\ud83c\udfaf Intent: QA (req: req_dfe50a1d)",
+      "\ud83e\udde0 Planner Source Strategy: document_only",
+      "\ud83d\udd0d RetrievalAgent (Planner requested internal documents)",
+      "\ud83d\udd04 CRAGAgent",
+      "\u2705 CRAG: Retrieval sufficient (score: 0.41)",
+      "\ud83d\udee1\ufe0f ValidationAgent",
+      "\ud83d\udee1\ufe0f Validation: Empty synthesis output",
+      "\u23f1\ufe0f Stage breakdown (ms): {'intent_classification_ms': 2.53, 'dense_retrieval_ms': 198.47, 'sparse_retrieval_ms': 10.29, 'rrf_fusion_ms': 0.0, 'cross_encoder_rerank_ms': 43.69, 'crag_evaluation_ms': 0.54, 'llm_synthesis_ms': 32616.09, 'validation_ms': 0.66, 'memory_persistence_ms': 9.61}"
+    ]
+  },
+  "C2": {
+    "query": "What is the embedding dimension in the document?",
+    "doc_filter": [
+      "doc_a_architecture_overview.txt"
+    ],
+    "exec_plan": {
+      "intent": "concept_explanation",
+      "difficulty": "beginner",
+      "source_strategy": "general_knowledge",
+      "selected_sources": [
+        "general_ai",
+        "wikipedia"
+      ],
+      "retrieval_strategy": "educational",
+      "expected_output": "detailed_explanation",
+      "estimated_latency": "medium",
+      "estimated_cost": "low",
+      "reasoning": "Plan for 'What is the embedding dimension in the d...': Intent=concept_explanation, SourceStrategy=general_knowledge, TargetDocs=[], Sources=['general_ai', 'wikipedia'].",
+      "reasoning_steps": [
+        "Intent Classification: 'concept_explanation' \u2014 Default educational intent: concept explanation.",
+        "Difficulty Estimation: 'beginner' \u2014 Foundational query suitable for beginner introduction.",
+        "Source Strategy Selection: 'general_knowledge' \u2014 General educational question; utilizing LLM core knowledge and Wikipedia without document retrieval.",
+        "Knowledge Source Selection: ['general_ai', 'wikipedia'] \u2014 Selected General AI and Wikipedia for general educational question without document search.",
+        "Retrieval Strategy: 'educational' \u2014 Strategy set to Educational for multi-media learning.",
+        "Expected Output Format: 'detailed_explanation'"
+      ],
+      "requires_internal_documents": false,
+      "requires_external_search": true,
+      "requires_research": false,
+      "requires_books": false,
+      "requires_videos": false,
+      "requires_code": false,
+      "target_documents": [],
+      "metadata": {
+        "query": "What is the embedding dimension in the document?",
+        "history_len": 0
+      }
+    },
+    "result_content": "",
+    "confidence": 0,
+    "response_status": "INSUFFICIENT_EVIDENCE",
+    "source_mode": "general_knowledge",
+    "provider": "NONE",
+    "model": "none",
+    "retrieved_chunks_count": 0,
+    "citations_count": 0,
+    "educational_response": {
+      "query": "",
+      "educational_mode": "detailed_explanation",
+      "ai_explanation": "",
+      "uploaded_notes": [],
+      "trusted_web": [],
+      "wikipedia": [],
+      "research": [],
+      "books": [],
+      "videos": [],
+      "code_examples": [],
+      "key_takeaways": [],
+      "important_terms": {},
+      "learning_summary": "Insufficient document evidence found for query.",
+      "conflicts": [],
+      "guided_questions": [],
+      "learning_path": null,
+      "citations": [],
+      "providers_used": [],
+      "confidence": 0.0,
+      "agreement": 0.0,
+      "synthesis_metadata": {
+        "response_status": "INSUFFICIENT_EVIDENCE",
+        "authoritative": true,
+        "provider": "NONE",
+        "model": "none",
+        "total_sources": 0,
+        "faithfulness": null,
+        "faithfulness_applicable": false,
+        "faithfulness_reason": "general_knowledge_no_document_grounding_required"
+      },
+      "response_status": "INSUFFICIENT_EVIDENCE"
+    },
+    "latency_ms": 19.3,
+    "agent_trace": [
+      "\ud83c\udfaf Intent: QA (req: req_db1dd19e)",
+      "\ud83e\udde0 Planner Source Strategy: general_knowledge",
+      "\u26a1 Skipping Document Retrieval (Planner Strategy: 'general_knowledge')",
+      "\ud83d\udee1\ufe0f ValidationAgent",
+      "\ud83d\udee1\ufe0f Validation: Empty answer with no evidence",
+      "\u23f1\ufe0f Stage breakdown (ms): {'intent_classification_ms': 0.56, 'llm_synthesis_ms': 7.62, 'validation_ms': 0.54, 'memory_persistence_ms': 9.39}"
+    ]
+  },
+  "C3": {
+    "query": "What are the hidden dimension, number of layers, and dropout value in doc_a_architecture_overview.txt?",
+    "doc_filter": [
+      "doc_a_architecture_overview.txt"
+    ],
+    "exec_plan": {
+      "intent": "topic_summary",
+      "difficulty": "advanced",
+      "source_strategy": "document_only",
+      "selected_sources": [
+        "internal_document"
+      ],
+      "retrieval_strategy": "internal_only",
+      "expected_output": "summary",
+      "estimated_latency": "low",
+      "estimated_cost": "low",
+      "reasoning": "Plan for 'What are the hidden dimension, number of...': Intent=topic_summary, SourceStrategy=document_only, TargetDocs=['doc_a_architecture_overview.txt'], Sources=['internal_document'].",
+      "reasoning_steps": [
+        "Target Documents Resolved: ['doc_a_architecture_overview.txt']",
+        "Intent Classification: 'topic_summary' \u2014 Query requests a topic summary.",
+        "Difficulty Estimation: 'advanced' \u2014 Requires advanced conceptual understanding and architectural analysis.",
+        "Source Strategy Selection: 'document_only' \u2014 User explicitly requested knowledge retrieval strictly from uploaded documents.",
+        "Knowledge Source Selection: ['internal_document'] \u2014 Selected internal documents exclusively for user document query.",
+        "Retrieval Strategy: 'internal_only' \u2014 Strategy set to Internal Only for document-grounded query.",
+        "Expected Output Format: 'summary'"
+      ],
+      "requires_internal_documents": true,
+      "requires_external_search": false,
+      "requires_research": false,
+      "requires_books": false,
+      "requires_videos": false,
+      "requires_code": false,
+      "target_documents": [
+        "doc_a_architecture_overview.txt"
+      ],
+      "metadata": {
+        "query": "What are the hidden dimension, number of layers, and dropout value in doc_a_architecture_overview.txt?",
+        "history_len": 0
+      }
+    },
+    "result_content": "",
+    "confidence": 0,
+    "response_status": "INSUFFICIENT_EVIDENCE",
+    "source_mode": "documents",
+    "provider": "NONE",
+    "model": "none",
+    "retrieved_chunks_count": 1,
+    "citations_count": 1,
+    "educational_response": {
+      "query": "",
+      "educational_mode": "detailed_explanation",
+      "ai_explanation": "",
+      "uploaded_notes": [],
+      "trusted_web": [],
+      "wikipedia": [],
+      "research": [],
+      "books": [],
+      "videos": [],
+      "code_examples": [],
+      "key_takeaways": [],
+      "important_terms": {},
+      "learning_summary": "Insufficient document evidence found for query.",
+      "conflicts": [],
+      "guided_questions": [],
+      "learning_path": null,
+      "citations": [],
+      "providers_used": [],
+      "confidence": 0.0,
+      "agreement": 0.0,
+      "synthesis_metadata": {
+        "response_status": "INSUFFICIENT_EVIDENCE",
+        "authoritative": true,
+        "provider": "NONE",
+        "model": "none",
+        "total_sources": 1,
+        "faithfulness": 0.0,
+        "faithfulness_applicable": true,
+        "faithfulness_reason": "empty_synthesis_output"
+      },
+      "response_status": "INSUFFICIENT_EVIDENCE"
+    },
+    "latency_ms": 113.2,
+    "agent_trace": [
+      "\ud83c\udfaf Intent: QA (req: req_b019a178)",
+      "\ud83e\udde0 Planner Source Strategy: document_only",
+      "\ud83d\udd0d RetrievalAgent (Planner requested internal documents)",
+      "\ud83d\udd04 CRAGAgent",
+      "\u2705 CRAG: Retrieval sufficient (score: 0.55)",
+      "\ud83d\udee1\ufe0f ValidationAgent",
+      "\ud83d\udee1\ufe0f Validation: Empty synthesis output",
+      "\u23f1\ufe0f Stage breakdown (ms): {'intent_classification_ms': 0.0, 'dense_retrieval_ms': 33.19, 'sparse_retrieval_ms': 15.43, 'rrf_fusion_ms': 0.0, 'cross_encoder_rerank_ms': 41.71, 'crag_evaluation_ms': 0.51, 'llm_synthesis_ms': 8.56, 'validation_ms': 0.0, 'memory_persistence_ms': 10.35}"
+    ]
+  },
+  "C4": {
+    "query": "Compare the architecture described in doc_a_architecture_overview.txt with the server hardware in doc_b_hardware_cluster.txt.",
+    "doc_filter": [
+      "doc_a_architecture_overview.txt",
+      "doc_b_hardware_cluster.txt"
+    ],
+    "exec_plan": {
+      "intent": "comparison",
+      "difficulty": "advanced",
+      "source_strategy": "document_augmented",
+      "selected_sources": [
+        "general_ai",
+        "internal_document",
+        "wikipedia"
+      ],
+      "retrieval_strategy": "educational",
+      "expected_output": "comparison_table",
+      "estimated_latency": "medium",
+      "estimated_cost": "low",
+      "reasoning": "Plan for 'Compare the architecture described in do...': Intent=comparison, SourceStrategy=document_augmented, TargetDocs=['doc_a_architecture_overview.txt', 'doc_b_hardware_cluster.txt'], Sources=['general_ai', 'internal_document', 'wikipedia'].",
+      "reasoning_steps": [
+        "Target Documents Resolved: ['doc_a_architecture_overview.txt', 'doc_b_hardware_cluster.txt']",
+        "Intent Classification: 'comparison' \u2014 Query requests a comparison between topics.",
+        "Difficulty Estimation: 'advanced' \u2014 Requires advanced conceptual understanding and architectural analysis.",
+        "Source Strategy Selection: 'document_augmented' \u2014 User requested comparing or augmenting uploaded documents with general knowledge.",
+        "Knowledge Source Selection: ['general_ai', 'internal_document', 'wikipedia'] \u2014 Selected internal documents augmented with General AI and Wikipedia.",
+        "Retrieval Strategy: 'educational' \u2014 Strategy set to Educational for multi-media learning.",
+        "Expected Output Format: 'comparison_table'"
+      ],
+      "requires_internal_documents": true,
+      "requires_external_search": true,
+      "requires_research": false,
+      "requires_books": false,
+      "requires_videos": false,
+      "requires_code": false,
+      "target_documents": [
+        "doc_a_architecture_overview.txt",
+        "doc_b_hardware_cluster.txt"
+      ],
+      "metadata": {
+        "query": "Compare the architecture described in doc_a_architecture_overview.txt with the server hardware in doc_b_hardware_cluster.txt.",
+        "history_len": 0
+      }
+    },
+    "result_content": "",
+    "confidence": 0,
+    "response_status": "INSUFFICIENT_EVIDENCE",
+    "source_mode": "documents",
+    "provider": "NONE",
+    "model": "none",
+    "retrieved_chunks_count": 2,
+    "citations_count": 2,
+    "educational_response": {
+      "query": "",
+      "educational_mode": "detailed_explanation",
+      "ai_explanation": "",
+      "uploaded_notes": [],
+      "trusted_web": [],
+      "wikipedia": [],
+      "research": [],
+      "books": [],
+      "videos": [],
+      "code_examples": [],
+      "key_takeaways": [],
+      "important_terms": {},
+      "learning_summary": "Insufficient document evidence found for query.",
+      "conflicts": [],
+      "guided_questions": [],
+      "learning_path": null,
+      "citations": [],
+      "providers_used": [],
+      "confidence": 0.0,
+      "agreement": 0.0,
+      "synthesis_metadata": {
+        "response_status": "INSUFFICIENT_EVIDENCE",
+        "authoritative": true,
+        "provider": "NONE",
+        "model": "none",
+        "total_sources": 2,
+        "faithfulness": 0.0,
+        "faithfulness_applicable": true,
+        "faithfulness_reason": "empty_synthesis_output"
+      },
+      "response_status": "INSUFFICIENT_EVIDENCE"
+    },
+    "latency_ms": 120.3,
+    "agent_trace": [
+      "\ud83c\udfaf Intent: COMPARE (req: req_abb97b0b)",
+      "\ud83e\udde0 Planner Source Strategy: document_augmented",
+      "\ud83d\udd0d RetrievalAgent (Planner requested internal documents)",
+      "\ud83d\udd04 CRAGAgent",
+      "\u2705 CRAG: Retrieval sufficient (score: 0.50)",
+      "\ud83d\udee1\ufe0f ValidationAgent",
+      "\ud83d\udee1\ufe0f Validation: Empty synthesis output",
+      "\u23f1\ufe0f Stage breakdown (ms): {'intent_classification_ms': 0.0, 'dense_retrieval_ms': 23.82, 'sparse_retrieval_ms': 12.87, 'rrf_fusion_ms': 0.0, 'cross_encoder_rerank_ms': 60.8, 'crag_evaluation_ms': 0.51, 'llm_synthesis_ms': 8.72, 'validation_ms': 0.0, 'memory_persistence_ms': 9.84}"
+    ]
+  },
+  "C5": {
+    "query": "How many attention heads does the model have across doc_a_architecture_overview.txt and doc_c_conflicting_spec.txt?",
+    "doc_filter": [
+      "doc_a_architecture_overview.txt",
+      "doc_c_conflicting_spec.txt"
+    ],
+    "exec_plan": {
+      "intent": "topic_summary",
+      "difficulty": "advanced",
+      "source_strategy": "document_only",
+      "selected_sources": [
+        "internal_document"
+      ],
+      "retrieval_strategy": "internal_only",
+      "expected_output": "summary",
+      "estimated_latency": "low",
+      "estimated_cost": "low",
+      "reasoning": "Plan for 'How many attention heads does the model ...': Intent=topic_summary, SourceStrategy=document_only, TargetDocs=['doc_a_architecture_overview.txt', 'doc_c_conflicting_spec.txt'], Sources=['internal_document'].",
+      "reasoning_steps": [
+        "Target Documents Resolved: ['doc_a_architecture_overview.txt', 'doc_c_conflicting_spec.txt']",
+        "Intent Classification: 'topic_summary' \u2014 Query requests a topic summary.",
+        "Difficulty Estimation: 'advanced' \u2014 Requires advanced conceptual understanding and architectural analysis.",
+        "Source Strategy Selection: 'document_only' \u2014 User explicitly requested knowledge retrieval strictly from uploaded documents.",
+        "Knowledge Source Selection: ['internal_document'] \u2014 Selected internal documents exclusively for user document query.",
+        "Retrieval Strategy: 'internal_only' \u2014 Strategy set to Internal Only for document-grounded query.",
+        "Expected Output Format: 'summary'"
+      ],
+      "requires_internal_documents": true,
+      "requires_external_search": false,
+      "requires_research": false,
+      "requires_books": false,
+      "requires_videos": false,
+      "requires_code": false,
+      "target_documents": [
+        "doc_a_architecture_overview.txt",
+        "doc_c_conflicting_spec.txt"
+      ],
+      "metadata": {
+        "query": "How many attention heads does the model have across doc_a_architecture_overview.txt and doc_c_conflicting_spec.txt?",
+        "history_len": 0
+      }
+    },
+    "result_content": "",
+    "confidence": 0,
+    "response_status": "INSUFFICIENT_EVIDENCE",
+    "source_mode": "documents",
+    "provider": "NONE",
+    "model": "none",
+    "retrieved_chunks_count": 2,
+    "citations_count": 2,
+    "educational_response": {
+      "query": "",
+      "educational_mode": "detailed_explanation",
+      "ai_explanation": "",
+      "uploaded_notes": [],
+      "trusted_web": [],
+      "wikipedia": [],
+      "research": [],
+      "books": [],
+      "videos": [],
+      "code_examples": [],
+      "key_takeaways": [],
+      "important_terms": {},
+      "learning_summary": "Insufficient document evidence found for query.",
+      "conflicts": [],
+      "guided_questions": [],
+      "learning_path": null,
+      "citations": [],
+      "providers_used": [],
+      "confidence": 0.0,
+      "agreement": 0.0,
+      "synthesis_metadata": {
+        "response_status": "INSUFFICIENT_EVIDENCE",
+        "authoritative": true,
+        "provider": "NONE",
+        "model": "none",
+        "total_sources": 2,
+        "faithfulness": 0.0,
+        "faithfulness_applicable": true,
+        "faithfulness_reason": "empty_synthesis_output"
+      },
+      "response_status": "INSUFFICIENT_EVIDENCE"
+    },
+    "latency_ms": 109.33,
+    "agent_trace": [
+      "\ud83c\udfaf Intent: QA (req: req_b4eec96b)",
+      "\ud83e\udde0 Planner Source Strategy: document_only",
+      "\ud83d\udd0d RetrievalAgent (Planner requested internal documents)",
+      "\ud83d\udd04 CRAGAgent",
+      "\u2705 CRAG: Retrieval sufficient (score: 0.44)",
+      "\ud83d\udee1\ufe0f ValidationAgent",
+      "\ud83d\udee1\ufe0f Validation: Empty synthesis output",
+      "\u23f1\ufe0f Stage breakdown (ms): {'intent_classification_ms': 0.57, 'dense_retrieval_ms': 26.06, 'sparse_retrieval_ms': 15.47, 'rrf_fusion_ms': 1.0, 'cross_encoder_rerank_ms': 46.25, 'crag_evaluation_ms': 0.6, 'llm_synthesis_ms': 7.82, 'validation_ms': 0.0, 'memory_persistence_ms': 9.51}"
+    ]
+  },
+  "C6": {
+    "query": "What is the battery capacity of the server in doc_a_architecture_overview.txt?",
+    "doc_filter": [
+      "doc_a_architecture_overview.txt"
+    ],
+    "exec_plan": {
+      "intent": "topic_summary",
+      "difficulty": "advanced",
+      "source_strategy": "document_only",
+      "selected_sources": [
+        "internal_document"
+      ],
+      "retrieval_strategy": "internal_only",
+      "expected_output": "summary",
+      "estimated_latency": "low",
+      "estimated_cost": "low",
+      "reasoning": "Plan for 'What is the battery capacity of the serv...': Intent=topic_summary, SourceStrategy=document_only, TargetDocs=['doc_a_architecture_overview.txt'], Sources=['internal_document'].",
+      "reasoning_steps": [
+        "Target Documents Resolved: ['doc_a_architecture_overview.txt']",
+        "Intent Classification: 'topic_summary' \u2014 Query requests a topic summary.",
+        "Difficulty Estimation: 'advanced' \u2014 Requires advanced conceptual understanding and architectural analysis.",
+        "Source Strategy Selection: 'document_only' \u2014 User explicitly requested knowledge retrieval strictly from uploaded documents.",
+        "Knowledge Source Selection: ['internal_document'] \u2014 Selected internal documents exclusively for user document query.",
+        "Retrieval Strategy: 'internal_only' \u2014 Strategy set to Internal Only for document-grounded query.",
+        "Expected Output Format: 'summary'"
+      ],
+      "requires_internal_documents": true,
+      "requires_external_search": false,
+      "requires_research": false,
+      "requires_books": false,
+      "requires_videos": false,
+      "requires_code": false,
+      "target_documents": [
+        "doc_a_architecture_overview.txt"
+      ],
+      "metadata": {
+        "query": "What is the battery capacity of the server in doc_a_architecture_overview.txt?",
+        "history_len": 0
+      }
+    },
+    "result_content": "",
+    "confidence": 0,
+    "response_status": "INSUFFICIENT_EVIDENCE",
+    "source_mode": "documents",
+    "provider": "NONE",
+    "model": "none",
+    "retrieved_chunks_count": 1,
+    "citations_count": 1,
+    "educational_response": {
+      "query": "",
+      "educational_mode": "detailed_explanation",
+      "ai_explanation": "",
+      "uploaded_notes": [],
+      "trusted_web": [],
+      "wikipedia": [],
+      "research": [],
+      "books": [],
+      "videos": [],
+      "code_examples": [],
+      "key_takeaways": [],
+      "important_terms": {},
+      "learning_summary": "Insufficient document evidence found for query.",
+      "conflicts": [],
+      "guided_questions": [],
+      "learning_path": null,
+      "citations": [],
+      "providers_used": [],
+      "confidence": 0.0,
+      "agreement": 0.0,
+      "synthesis_metadata": {
+        "response_status": "INSUFFICIENT_EVIDENCE",
+        "authoritative": true,
+        "provider": "NONE",
+        "model": "none",
+        "total_sources": 1,
+        "faithfulness": 0.0,
+        "faithfulness_applicable": true,
+        "faithfulness_reason": "empty_synthesis_output"
+      },
+      "response_status": "INSUFFICIENT_EVIDENCE"
+    },
+    "latency_ms": 86.75,
+    "agent_trace": [
+      "\ud83c\udfaf Intent: QA (req: req_fd236558)",
+      "\ud83e\udde0 Planner Source Strategy: document_only",
+      "\ud83d\udd0d RetrievalAgent (Planner requested internal documents)",
+      "\ud83d\udd04 CRAGAgent",
+      "\u2705 CRAG: Retrieval sufficient (score: 0.41)",
+      "\ud83d\udee1\ufe0f ValidationAgent",
+      "\ud83d\udee1\ufe0f Validation: Empty synthesis output",
+      "\u23f1\ufe0f Stage breakdown (ms): {'intent_classification_ms': 0.55, 'dense_retrieval_ms': 22.85, 'sparse_retrieval_ms': 10.11, 'rrf_fusion_ms': 0.0, 'cross_encoder_rerank_ms': 29.75, 'crag_evaluation_ms': 0.0, 'llm_synthesis_ms': 8.79, 'validation_ms': 0.0, 'memory_persistence_ms': 9.89}"
+    ]
+  },
+  "C7": {
+    "query": "Explain the attention mechanism used by the transformer from doc_b_hardware_cluster.txt.",
+    "doc_filter": [
+      "doc_b_hardware_cluster.txt"
+    ],
+    "exec_plan": {
+      "intent": "concept_explanation",
+      "difficulty": "advanced",
+      "source_strategy": "document_only",
+      "selected_sources": [
+        "internal_document"
+      ],
+      "retrieval_strategy": "internal_only",
+      "expected_output": "detailed_explanation",
+      "estimated_latency": "low",
+      "estimated_cost": "low",
+      "reasoning": "Plan for 'Explain the attention mechanism used by ...': Intent=concept_explanation, SourceStrategy=document_only, TargetDocs=['doc_b_hardware_cluster.txt'], Sources=['internal_document'].",
+      "reasoning_steps": [
+        "Target Documents Resolved: ['doc_b_hardware_cluster.txt']",
+        "Intent Classification: 'concept_explanation' \u2014 Default educational intent: concept explanation.",
+        "Difficulty Estimation: 'advanced' \u2014 Requires advanced conceptual understanding and architectural analysis.",
+        "Source Strategy Selection: 'document_only' \u2014 User explicitly requested knowledge retrieval strictly from uploaded documents.",
+        "Knowledge Source Selection: ['internal_document'] \u2014 Selected internal documents exclusively for user document query.",
+        "Retrieval Strategy: 'internal_only' \u2014 Strategy set to Internal Only for document-grounded query.",
+        "Expected Output Format: 'detailed_explanation'"
+      ],
+      "requires_internal_documents": true,
+      "requires_external_search": false,
+      "requires_research": false,
+      "requires_books": false,
+      "requires_videos": false,
+      "requires_code": false,
+      "target_documents": [
+        "doc_b_hardware_cluster.txt"
+      ],
+      "metadata": {
+        "query": "Explain the attention mechanism used by the transformer from doc_b_hardware_cluster.txt.",
+        "history_len": 0
+      }
+    },
+    "result_content": "",
+    "confidence": 0,
+    "response_status": "INSUFFICIENT_EVIDENCE",
+    "source_mode": "documents",
+    "provider": "NONE",
+    "model": "none",
+    "retrieved_chunks_count": 1,
+    "citations_count": 1,
+    "educational_response": {
+      "query": "",
+      "educational_mode": "detailed_explanation",
+      "ai_explanation": "",
+      "uploaded_notes": [],
+      "trusted_web": [],
+      "wikipedia": [],
+      "research": [],
+      "books": [],
+      "videos": [],
+      "code_examples": [],
+      "key_takeaways": [],
+      "important_terms": {},
+      "learning_summary": "Insufficient document evidence found for query.",
+      "conflicts": [],
+      "guided_questions": [],
+      "learning_path": null,
+      "citations": [],
+      "providers_used": [],
+      "confidence": 0.0,
+      "agreement": 0.0,
+      "synthesis_metadata": {
+        "response_status": "INSUFFICIENT_EVIDENCE",
+        "authoritative": true,
+        "provider": "NONE",
+        "model": "none",
+        "total_sources": 1,
+        "faithfulness": 0.0,
+        "faithfulness_applicable": true,
+        "faithfulness_reason": "empty_synthesis_output"
+      },
+      "response_status": "INSUFFICIENT_EVIDENCE"
+    },
+    "latency_ms": 85.74,
+    "agent_trace": [
+      "\ud83c\udfaf Intent: QA (req: req_6df99a91)",
+      "\ud83e\udde0 Planner Source Strategy: document_only",
+      "\ud83d\udd0d RetrievalAgent (Planner requested internal documents)",
+      "\ud83d\udd04 CRAGAgent",
+      "\u2705 CRAG: Retrieval sufficient (score: 0.41)",
+      "\ud83d\udee1\ufe0f ValidationAgent",
+      "\ud83d\udee1\ufe0f Validation: Empty synthesis output",
+      "\u23f1\ufe0f Stage breakdown (ms): {'intent_classification_ms': 0.0, 'dense_retrieval_ms': 22.32, 'sparse_retrieval_ms': 9.89, 'rrf_fusion_ms': 0.0, 'cross_encoder_rerank_ms': 32.22, 'crag_evaluation_ms': 0.52, 'llm_synthesis_ms': 7.36, 'validation_ms': 0.0, 'memory_persistence_ms': 9.88}"
+    ]
+  },
+  "C8": {
+    "query": "Explain entropy in information theory with a simple example.",
+    "doc_filter": [],
+    "exec_plan": {
+      "intent": "concept_explanation",
+      "difficulty": "beginner",
+      "source_strategy": "general_knowledge",
+      "selected_sources": [
+        "general_ai",
+        "wikipedia"
+      ],
+      "retrieval_strategy": "educational",
+      "expected_output": "detailed_explanation",
+      "estimated_latency": "medium",
+      "estimated_cost": "low",
+      "reasoning": "Plan for 'Explain entropy in information theory wi...': Intent=concept_explanation, SourceStrategy=general_knowledge, TargetDocs=[], Sources=['general_ai', 'wikipedia'].",
+      "reasoning_steps": [
+        "Intent Classification: 'concept_explanation' \u2014 Default educational intent: concept explanation.",
+        "Difficulty Estimation: 'beginner' \u2014 Foundational query suitable for beginner introduction.",
+        "Source Strategy Selection: 'general_knowledge' \u2014 General educational question; utilizing LLM core knowledge and Wikipedia without document retrieval.",
+        "Knowledge Source Selection: ['general_ai', 'wikipedia'] \u2014 Selected General AI and Wikipedia for general educational question without document search.",
+        "Retrieval Strategy: 'educational' \u2014 Strategy set to Educational for multi-media learning.",
+        "Expected Output Format: 'detailed_explanation'"
+      ],
+      "requires_internal_documents": false,
+      "requires_external_search": true,
+      "requires_research": false,
+      "requires_books": false,
+      "requires_videos": false,
+      "requires_code": false,
+      "target_documents": [],
+      "metadata": {
+        "query": "Explain entropy in information theory with a simple example.",
+        "history_len": 0
+      }
+    },
+    "result_content": "",
+    "confidence": 0,
+    "response_status": "INSUFFICIENT_EVIDENCE",
+    "source_mode": "general_knowledge",
+    "provider": "NONE",
+    "model": "none",
+    "retrieved_chunks_count": 0,
+    "citations_count": 0,
+    "educational_response": {
+      "query": "",
+      "educational_mode": "detailed_explanation",
+      "ai_explanation": "",
+      "uploaded_notes": [],
+      "trusted_web": [],
+      "wikipedia": [],
+      "research": [],
+      "books": [],
+      "videos": [],
+      "code_examples": [],
+      "key_takeaways": [],
+      "important_terms": {},
+      "learning_summary": "Insufficient document evidence found for query.",
+      "conflicts": [],
+      "guided_questions": [],
+      "learning_path": null,
+      "citations": [],
+      "providers_used": [],
+      "confidence": 0.0,
+      "agreement": 0.0,
+      "synthesis_metadata": {
+        "response_status": "INSUFFICIENT_EVIDENCE",
+        "authoritative": true,
+        "provider": "NONE",
+        "model": "none",
+        "total_sources": 0,
+        "faithfulness": null,
+        "faithfulness_applicable": false,
+        "faithfulness_reason": "general_knowledge_no_document_grounding_required"
+      },
+      "response_status": "INSUFFICIENT_EVIDENCE"
+    },
+    "latency_ms": 18.24,
+    "agent_trace": [
+      "\ud83c\udfaf Intent: QA (req: req_f929238f)",
+      "\ud83e\udde0 Planner Source Strategy: general_knowledge",
+      "\u26a1 Skipping Document Retrieval (Planner Strategy: 'general_knowledge')",
+      "\ud83d\udee1\ufe0f ValidationAgent",
+      "\ud83d\udee1\ufe0f Validation: Empty answer with no evidence",
+      "\u23f1\ufe0f Stage breakdown (ms): {'intent_classification_ms': 0.6, 'llm_synthesis_ms': 6.71, 'validation_ms': 0.55, 'memory_persistence_ms': 9.83}"
+    ]
+  },
+  "C9": {
+    "query": "Give me a simple example of that.",
+    "doc_filter": [],
+    "exec_plan": {
+      "intent": "concept_explanation",
+      "difficulty": "beginner",
+      "source_strategy": "general_knowledge",
+      "selected_sources": [
+        "general_ai",
+        "wikipedia"
+      ],
+      "retrieval_strategy": "educational",
+      "expected_output": "detailed_explanation",
+      "estimated_latency": "medium",
+      "estimated_cost": "low",
+      "reasoning": "Plan for 'Give me a simple example of that....': Intent=concept_explanation, SourceStrategy=general_knowledge, TargetDocs=[], Sources=['general_ai', 'wikipedia'].",
+      "reasoning_steps": [
+        "Intent Classification: 'concept_explanation' \u2014 Default educational intent: concept explanation.",
+        "Difficulty Estimation: 'beginner' \u2014 Foundational query suitable for beginner introduction.",
+        "Source Strategy Selection: 'general_knowledge' \u2014 General educational question; utilizing LLM core knowledge and Wikipedia without document retrieval.",
+        "Knowledge Source Selection: ['general_ai', 'wikipedia'] \u2014 Selected General AI and Wikipedia for general educational question without document search.",
+        "Retrieval Strategy: 'educational' \u2014 Strategy set to Educational for multi-media learning.",
+        "Expected Output Format: 'detailed_explanation'"
+      ],
+      "requires_internal_documents": false,
+      "requires_external_search": true,
+      "requires_research": false,
+      "requires_books": false,
+      "requires_videos": false,
+      "requires_code": false,
+      "target_documents": [],
+      "metadata": {
+        "query": "Give me a simple example of that.",
+        "history_len": 2
+      }
+    },
+    "result_content": "",
+    "confidence": 0,
+    "response_status": "INSUFFICIENT_EVIDENCE",
+    "source_mode": "general_knowledge",
+    "provider": "NONE",
+    "model": "none",
+    "retrieved_chunks_count": 0,
+    "citations_count": 0,
+    "educational_response": {
+      "query": "",
+      "educational_mode": "detailed_explanation",
+      "ai_explanation": "",
+      "uploaded_notes": [],
+      "trusted_web": [],
+      "wikipedia": [],
+      "research": [],
+      "books": [],
+      "videos": [],
+      "code_examples": [],
+      "key_takeaways": [],
+      "important_terms": {},
+      "learning_summary": "Insufficient document evidence found for query.",
+      "conflicts": [],
+      "guided_questions": [],
+      "learning_path": null,
+      "citations": [],
+      "providers_used": [],
+      "confidence": 0.0,
+      "agreement": 0.0,
+      "synthesis_metadata": {
+        "response_status": "INSUFFICIENT_EVIDENCE",
+        "authoritative": true,
+        "provider": "NONE",
+        "model": "none",
+        "total_sources": 0,
+        "faithfulness": null,
+        "faithfulness_applicable": false,
+        "faithfulness_reason": "general_knowledge_no_document_grounding_required"
+      },
+      "response_status": "INSUFFICIENT_EVIDENCE"
+    },
+    "latency_ms": 19.05,
+    "agent_trace": [
+      "\ud83c\udfaf Intent: QA (req: req_bd76259d)",
+      "\ud83e\udde0 Planner Source Strategy: general_knowledge",
+      "\u26a1 Skipping Document Retrieval (Planner Strategy: 'general_knowledge')",
+      "\ud83d\udee1\ufe0f ValidationAgent",
+      "\ud83d\udee1\ufe0f Validation: Empty answer with no evidence",
+      "\u23f1\ufe0f Stage breakdown (ms): {'intent_classification_ms': 0.0, 'llm_synthesis_ms': 7.34, 'validation_ms': 0.0, 'memory_persistence_ms': 10.0}"
+    ]
+  },
+  "C10": {
+    "query": "What server hardware is described in doc_b_hardware_cluster.txt?",
+    "doc_filter": [
+      "doc_b_hardware_cluster.txt"
+    ],
+    "exec_plan": {
+      "intent": "concept_explanation",
+      "difficulty": "intermediate",
+      "source_strategy": "document_only",
+      "selected_sources": [
+        "internal_document"
+      ],
+      "retrieval_strategy": "internal_only",
+      "expected_output": "detailed_explanation",
+      "estimated_latency": "low",
+      "estimated_cost": "low",
+      "reasoning": "Plan for 'What server hardware is described in doc...': Intent=concept_explanation, SourceStrategy=document_only, TargetDocs=['doc_b_hardware_cluster.txt'], Sources=['internal_document'].",
+      "reasoning_steps": [
+        "Target Documents Resolved: ['doc_b_hardware_cluster.txt']",
+        "Intent Classification: 'concept_explanation' \u2014 Default educational intent: concept explanation.",
+        "Difficulty Estimation: 'intermediate' \u2014 Multi-turn conversation indicates progressing intermediate student context.",
+        "Source Strategy Selection: 'document_only' \u2014 User explicitly requested knowledge retrieval strictly from uploaded documents.",
+        "Knowledge Source Selection: ['internal_document'] \u2014 Selected internal documents exclusively for user document query.",
+        "Retrieval Strategy: 'internal_only' \u2014 Strategy set to Internal Only for document-grounded query.",
+        "Expected Output Format: 'detailed_explanation'"
+      ],
+      "requires_internal_documents": true,
+      "requires_external_search": false,
+      "requires_research": false,
+      "requires_books": false,
+      "requires_videos": false,
+      "requires_code": false,
+      "target_documents": [
+        "doc_b_hardware_cluster.txt"
+      ],
+      "metadata": {
+        "query": "What server hardware is described in doc_b_hardware_cluster.txt?",
+        "history_len": 4
+      }
+    },
+    "result_content": "",
+    "confidence": 0,
+    "response_status": "INSUFFICIENT_EVIDENCE",
+    "source_mode": "documents",
+    "provider": "NONE",
+    "model": "none",
+    "retrieved_chunks_count": 1,
+    "citations_count": 1,
+    "educational_response": {
+      "query": "",
+      "educational_mode": "detailed_explanation",
+      "ai_explanation": "",
+      "uploaded_notes": [],
+      "trusted_web": [],
+      "wikipedia": [],
+      "research": [],
+      "books": [],
+      "videos": [],
+      "code_examples": [],
+      "key_takeaways": [],
+      "important_terms": {},
+      "learning_summary": "Insufficient document evidence found for query.",
+      "conflicts": [],
+      "guided_questions": [],
+      "learning_path": null,
+      "citations": [],
+      "providers_used": [],
+      "confidence": 0.0,
+      "agreement": 0.0,
+      "synthesis_metadata": {
+        "response_status": "INSUFFICIENT_EVIDENCE",
+        "authoritative": true,
+        "provider": "NONE",
+        "model": "none",
+        "total_sources": 1,
+        "faithfulness": 0.0,
+        "faithfulness_applicable": true,
+        "faithfulness_reason": "empty_synthesis_output"
+      },
+      "response_status": "INSUFFICIENT_EVIDENCE"
+    },
+    "latency_ms": 86.87,
+    "agent_trace": [
+      "\ud83c\udfaf Intent: QA (req: req_7ce7424f)",
+      "\ud83e\udde0 Planner Source Strategy: document_only",
+      "\ud83d\udd0d RetrievalAgent (Planner requested internal documents)",
+      "\ud83d\udd04 CRAGAgent",
+      "\u2705 CRAG: Retrieval sufficient (score: 0.41)",
+      "\ud83d\udee1\ufe0f ValidationAgent",
+      "\ud83d\udee1\ufe0f Validation: Empty synthesis output",
+      "\u23f1\ufe0f Stage breakdown (ms): {'intent_classification_ms': 0.0, 'dense_retrieval_ms': 21.47, 'sparse_retrieval_ms': 8.25, 'rrf_fusion_ms': 0.0, 'cross_encoder_rerank_ms': 31.06, 'crag_evaluation_ms': 0.61, 'llm_synthesis_ms': 7.64, 'validation_ms': 0.0, 'memory_persistence_ms': 12.84}"
+    ]
+  },
+  "C11": {
+    "query": "Explain backpropagation in neural networks.",
+    "doc_filter": [],
+    "exec_plan": {
+      "intent": "concept_explanation",
+      "difficulty": "advanced",
+      "source_strategy": "general_knowledge",
+      "selected_sources": [
+        "general_ai",
+        "wikipedia"
+      ],
+      "retrieval_strategy": "educational",
+      "expected_output": "detailed_explanation",
+      "estimated_latency": "medium",
+      "estimated_cost": "low",
+      "reasoning": "Plan for 'Explain backpropagation in neural networ...': Intent=concept_explanation, SourceStrategy=general_knowledge, TargetDocs=[], Sources=['general_ai', 'wikipedia'].",
+      "reasoning_steps": [
+        "Intent Classification: 'concept_explanation' \u2014 Default educational intent: concept explanation.",
+        "Difficulty Estimation: 'advanced' \u2014 Requires advanced conceptual understanding and architectural analysis.",
+        "Source Strategy Selection: 'general_knowledge' \u2014 General educational question; utilizing LLM core knowledge and Wikipedia without document retrieval.",
+        "Knowledge Source Selection: ['general_ai', 'wikipedia'] \u2014 Selected General AI and Wikipedia for general educational question without document search.",
+        "Retrieval Strategy: 'educational' \u2014 Strategy set to Educational for multi-media learning.",
+        "Expected Output Format: 'detailed_explanation'"
+      ],
+      "requires_internal_documents": false,
+      "requires_external_search": true,
+      "requires_research": false,
+      "requires_books": false,
+      "requires_videos": false,
+      "requires_code": false,
+      "target_documents": [],
+      "metadata": {
+        "query": "Explain backpropagation in neural networks.",
+        "history_len": 0
+      }
+    },
+    "result_content": "",
+    "confidence": 0,
+    "response_status": "INSUFFICIENT_EVIDENCE",
+    "source_mode": "general_knowledge",
+    "provider": "NONE",
+    "model": "none",
+    "retrieved_chunks_count": 0,
+    "citations_count": 0,
+    "educational_response": {
+      "query": "",
+      "educational_mode": "detailed_explanation",
+      "ai_explanation": "",
+      "uploaded_notes": [],
+      "trusted_web": [],
+      "wikipedia": [],
+      "research": [],
+      "books": [],
+      "videos": [],
+      "code_examples": [],
+      "key_takeaways": [],
+      "important_terms": {},
+      "learning_summary": "Insufficient document evidence found for query.",
+      "conflicts": [],
+      "guided_questions": [],
+      "learning_path": null,
+      "citations": [],
+      "providers_used": [],
+      "confidence": 0.0,
+      "agreement": 0.0,
+      "synthesis_metadata": {
+        "response_status": "INSUFFICIENT_EVIDENCE",
+        "authoritative": true,
+        "provider": "NONE",
+        "model": "none",
+        "total_sources": 0,
+        "faithfulness": null,
+        "faithfulness_applicable": false,
+        "faithfulness_reason": "general_knowledge_no_document_grounding_required"
+      },
+      "response_status": "INSUFFICIENT_EVIDENCE"
+    },
+    "latency_ms": 18.3,
+    "agent_trace": [
+      "\ud83c\udfaf Intent: QA (req: req_6d987549)",
+      "\ud83e\udde0 Planner Source Strategy: general_knowledge",
+      "\u26a1 Skipping Document Retrieval (Planner Strategy: 'general_knowledge')",
+      "\ud83d\udee1\ufe0f ValidationAgent",
+      "\ud83d\udee1\ufe0f Validation: Empty answer with no evidence",
+      "\u23f1\ufe0f Stage breakdown (ms): {'intent_classification_ms': 0.54, 'llm_synthesis_ms': 7.32, 'validation_ms': 0.55, 'memory_persistence_ms': 9.34}"
+    ]
+  },
+  "C12": {
+    "query": "Explain this.",
+    "doc_filter": [],
+    "exec_plan": {
+      "intent": "concept_explanation",
+      "difficulty": "intermediate",
+      "source_strategy": "general_knowledge",
+      "selected_sources": [
+        "general_ai",
+        "wikipedia"
+      ],
+      "retrieval_strategy": "educational",
+      "expected_output": "detailed_explanation",
+      "estimated_latency": "medium",
+      "estimated_cost": "low",
+      "reasoning": "Plan for 'Explain this....': Intent=concept_explanation, SourceStrategy=general_knowledge, TargetDocs=[], Sources=['general_ai', 'wikipedia'].",
+      "reasoning_steps": [
+        "Intent Classification: 'concept_explanation' \u2014 Default educational intent: concept explanation.",
+        "Difficulty Estimation: 'intermediate' \u2014 Default intermediate educational difficulty.",
+        "Source Strategy Selection: 'general_knowledge' \u2014 General educational question; utilizing LLM core knowledge and Wikipedia without document retrieval.",
+        "Knowledge Source Selection: ['general_ai', 'wikipedia'] \u2014 Selected General AI and Wikipedia for general educational question without document search.",
+        "Retrieval Strategy: 'educational' \u2014 Strategy set to Educational for multi-media learning.",
+        "Expected Output Format: 'detailed_explanation'"
+      ],
+      "requires_internal_documents": false,
+      "requires_external_search": true,
+      "requires_research": false,
+      "requires_books": false,
+      "requires_videos": false,
+      "requires_code": false,
+      "target_documents": [],
+      "metadata": {
+        "query": "Explain this.",
+        "history_len": 0
+      }
+    },
+    "result_content": "",
+    "confidence": 0,
+    "response_status": "INSUFFICIENT_EVIDENCE",
+    "source_mode": "general_knowledge",
+    "provider": "NONE",
+    "model": "none",
+    "retrieved_chunks_count": 0,
+    "citations_count": 0,
+    "educational_response": {
+      "query": "",
+      "educational_mode": "detailed_explanation",
+      "ai_explanation": "",
+      "uploaded_notes": [],
+      "trusted_web": [],
+      "wikipedia": [],
+      "research": [],
+      "books": [],
+      "videos": [],
+      "code_examples": [],
+      "key_takeaways": [],
+      "important_terms": {},
+      "learning_summary": "Insufficient document evidence found for query.",
+      "conflicts": [],
+      "guided_questions": [],
+      "learning_path": null,
+      "citations": [],
+      "providers_used": [],
+      "confidence": 0.0,
+      "agreement": 0.0,
+      "synthesis_metadata": {
+        "response_status": "INSUFFICIENT_EVIDENCE",
+        "authoritative": true,
+        "provider": "NONE",
+        "model": "none",
+        "total_sources": 0,
+        "faithfulness": null,
+        "faithfulness_applicable": false,
+        "faithfulness_reason": "general_knowledge_no_document_grounding_required"
+      },
+      "response_status": "INSUFFICIENT_EVIDENCE"
+    },
+    "latency_ms": 16.83,
+    "agent_trace": [
+      "\ud83c\udfaf Intent: QA (req: req_b1416173)",
+      "\ud83e\udde0 Planner Source Strategy: general_knowledge",
+      "\u26a1 Skipping Document Retrieval (Planner Strategy: 'general_knowledge')",
+      "\ud83d\udee1\ufe0f ValidationAgent",
+      "\ud83d\udee1\ufe0f Validation: Empty answer with no evidence",
+      "\u23f1\ufe0f Stage breakdown (ms): {'intent_classification_ms': 0.0, 'llm_synthesis_ms': 6.75, 'validation_ms': 0.0, 'memory_persistence_ms': 9.52}"
+    ]
+  }
+}

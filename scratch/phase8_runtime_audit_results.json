@@ -1,0 +1,238 @@
+[
+  {
+    "test_id": "TEST A",
+    "query": "Explain Retrieval-Augmented Generation in detail.",
+    "intent": "concept_explanation",
+    "source_strategy": "general_knowledge",
+    "selected_sources": [
+      "general_ai",
+      "wikipedia"
+    ],
+    "doc_usage_mode": "excluded",
+    "dispatched_provider_counts": {
+      "mock_groq": 1,
+      "wikipedia": 5
+    },
+    "total_sources_retrieved": 6,
+    "response_status": "SUCCESS",
+    "agent_trace": [
+      "\ud83d\ude80 Orchestrator started request 365b49d5",
+      "\ud83e\udde0 Planner Source Strategy: general_knowledge",
+      "\u26a1 Skipping Document Retrieval (Planner Strategy: 'general_knowledge')",
+      "\ud83c\udf10 Multi-Source Dispatcher fetched 6 items across providers: ['wikipedia', 'mock_groq']",
+      "\ud83d\udee1\ufe0f ValidationAgent",
+      "\ud83d\udee1\ufe0f Validation completed (Evidence Faithfulness: N/A (General Knowledge), Mode: web)",
+      "\u23f1\ufe0f Stage breakdown (ms): {'llm_synthesis_ms': 0.04, 'validation_ms': 0.12, 'memory_persistence_ms': 2.61}"
+    ],
+    "content_preview": "### Educational Guide: Explain Retrieval-Augmented Generation in detail.\n\nRetrieval-Augmented Generation (RAG) integrates dense retrieval with neural generation [1].\n\n#### Key Evidence & Insights\nVerified research demonstrates that grounded synthesis significantly mitigates model hallucination [1].\n",
+    "debug_prompt_snippet": "=== EXECUTION METADATA ===\nStrategy: general_knowledge\nDecision: General Educational Lesson\nMode: general_knowledge\nTemplate: GENERAL_KNOWLEDGE\nDoc Count: 0\n\n=== SYSTEM PROMPT ===\nYou are EKIP, an expert educational AI tutor designed to help users deeply understand topics.\n\nStudent Question: \"What is Hydro chloric acid and where it is used.\"\n\nPedagogical Directives:\n- Target Learner Difficulty: BEGINNER\n- Educational Intent: concept_explanation\n- Requested Output Format: detailed_explanation\n- Source Strategy: general_knowledge\n\nVERIFIED KNOWLEDGE EVIDENCE:\nNo external evidence collected.\n\n\nPE",
+    "categories_in_edu_res": {
+      "uploaded_notes": 0,
+      "trusted_web": 1,
+      "wikipedia": 5,
+      "research": 0,
+      "books": 0,
+      "videos": 0,
+      "code_examples": 0
+    }
+  },
+  {
+    "test_id": "TEST B",
+    "query": "What are the important research papers on RAG hallucination and why are they important?",
+    "intent": "research_discovery",
+    "source_strategy": "research",
+    "selected_sources": [
+      "general_ai",
+      "semantic_scholar",
+      "arxiv",
+      "trusted_web"
+    ],
+    "doc_usage_mode": "excluded",
+    "dispatched_provider_counts": {
+      "mock_groq": 1,
+      "arxiv": 5,
+      "tavily": 5
+    },
+    "total_sources_retrieved": 11,
+    "response_status": "SUCCESS",
+    "agent_trace": [
+      "\ud83d\ude80 Orchestrator started request ab1d4cab",
+      "\ud83e\udde0 Planner Source Strategy: research",
+      "\u26a1 Skipping Document Retrieval (Planner Strategy: 'research')",
+      "\ud83c\udf10 Multi-Source Dispatcher fetched 11 items across providers: ['arxiv', 'tavily', 'mock_groq']",
+      "\ud83d\udee1\ufe0f ValidationAgent",
+      "\ud83d\udee1\ufe0f Validation completed (Evidence Faithfulness: 0.67, Mode: web)",
+      "\u23f1\ufe0f Stage breakdown (ms): {'llm_synthesis_ms': 0.03, 'validation_ms': 2.49, 'memory_persistence_ms': 0.3}"
+    ],
+    "content_preview": "### Educational Guide: What are the important research papers on RAG hallucination and why are they important?\n\nRetrieval-Augmented Generation (RAG) integrates dense retrieval with neural generation [1].\n\n#### Key Evidence & Insights\nVerified research demonstrates that grounded synthesis significant",
+    "debug_prompt_snippet": "=== EXECUTION METADATA ===\nStrategy: general_knowledge\nDecision: General Educational Lesson\nMode: general_knowledge\nTemplate: GENERAL_KNOWLEDGE\nDoc Count: 0\n\n=== SYSTEM PROMPT ===\nYou are EKIP, an expert educational AI tutor designed to help users deeply understand topics.\n\nStudent Question: \"What is Hydro chloric acid and where it is used.\"\n\nPedagogical Directives:\n- Target Learner Difficulty: BEGINNER\n- Educational Intent: concept_explanation\n- Requested Output Format: detailed_explanation\n- Source Strategy: general_knowledge\n\nVERIFIED KNOWLEDGE EVIDENCE:\nNo external evidence collected.\n\n\nPE",
+    "categories_in_edu_res": {
+      "uploaded_notes": 0,
+      "trusted_web": 6,
+      "wikipedia": 0,
+      "research": 5,
+      "books": 0,
+      "videos": 0,
+      "code_examples": 0
+    }
+  },
+  {
+    "test_id": "TEST C",
+    "query": "I want to learn Docker from beginner to advanced. Give me a learning explanation and recommend useful YouTube videos and GitHub repositories.",
+    "intent": "video_recommendation",
+    "source_strategy": "hybrid",
+    "selected_sources": [
+      "general_ai",
+      "wikipedia",
+      "video",
+      "trusted_web",
+      "github_repo"
+    ],
+    "doc_usage_mode": "excluded",
+    "dispatched_provider_counts": {
+      "mock_groq": 1,
+      "youtube": 5,
+      "tavily": 4
+    },
+    "total_sources_retrieved": 10,
+    "response_status": "SUCCESS",
+    "agent_trace": [
+      "\ud83d\ude80 Orchestrator started request df781091",
+      "\ud83e\udde0 Planner Source Strategy: hybrid",
+      "\u26a1 Skipping Document Retrieval (Planner Strategy: 'hybrid')",
+      "\ud83c\udf10 Multi-Source Dispatcher fetched 10 items across providers: ['youtube', 'tavily', 'mock_groq']",
+      "\ud83d\udee1\ufe0f ValidationAgent",
+      "\ud83d\udee1\ufe0f Validation completed (Evidence Faithfulness: 0.67, Mode: web)",
+      "\u23f1\ufe0f Stage breakdown (ms): {'llm_synthesis_ms': 0.04, 'validation_ms': 0.48, 'memory_persistence_ms': 0.32}"
+    ],
+    "content_preview": "### Educational Guide: I want to learn Docker from beginner to advanced. Give me a learning explanation and recommend useful YouTube videos and GitHub repositories.\n\nRetrieval-Augmented Generation (RAG) integrates dense retrieval with neural generation [1].\n\n#### Key Evidence & Insights\nVerified res",
+    "debug_prompt_snippet": "=== EXECUTION METADATA ===\nStrategy: general_knowledge\nDecision: General Educational Lesson\nMode: general_knowledge\nTemplate: GENERAL_KNOWLEDGE\nDoc Count: 0\n\n=== SYSTEM PROMPT ===\nYou are EKIP, an expert educational AI tutor designed to help users deeply understand topics.\n\nStudent Question: \"What is Hydro chloric acid and where it is used.\"\n\nPedagogical Directives:\n- Target Learner Difficulty: BEGINNER\n- Educational Intent: concept_explanation\n- Requested Output Format: detailed_explanation\n- Source Strategy: general_knowledge\n\nVERIFIED KNOWLEDGE EVIDENCE:\nNo external evidence collected.\n\n\nPE",
+    "categories_in_edu_res": {
+      "uploaded_notes": 0,
+      "trusted_web": 5,
+      "wikipedia": 0,
+      "research": 0,
+      "books": 0,
+      "videos": 5,
+      "code_examples": 0
+    }
+  },
+  {
+    "test_id": "TEST D",
+    "query": "Explain RAG hallucination and give me research papers, videos, and useful GitHub repositories.",
+    "intent": "research_discovery",
+    "source_strategy": "research",
+    "selected_sources": [
+      "general_ai",
+      "semantic_scholar",
+      "arxiv",
+      "trusted_web",
+      "video",
+      "github_repo"
+    ],
+    "doc_usage_mode": "excluded",
+    "dispatched_provider_counts": {
+      "mock_groq": 1,
+      "arxiv": 5,
+      "youtube": 5,
+      "tavily": 5
+    },
+    "total_sources_retrieved": 16,
+    "response_status": "SUCCESS",
+    "agent_trace": [
+      "\ud83d\ude80 Orchestrator started request dee1c2fb",
+      "\ud83e\udde0 Planner Source Strategy: research",
+      "\u26a1 Skipping Document Retrieval (Planner Strategy: 'research')",
+      "\ud83c\udf10 Multi-Source Dispatcher fetched 16 items across providers: ['youtube', 'arxiv', 'tavily', 'mock_groq']",
+      "\ud83d\udee1\ufe0f ValidationAgent",
+      "\ud83d\udee1\ufe0f Validation completed (Evidence Faithfulness: 0.83, Mode: web)",
+      "\u23f1\ufe0f Stage breakdown (ms): {'llm_synthesis_ms': 0.02, 'validation_ms': 0.46, 'memory_persistence_ms': 0.28}"
+    ],
+    "content_preview": "### Educational Guide: Explain RAG hallucination and give me research papers, videos, and useful GitHub repositories.\n\nRetrieval-Augmented Generation (RAG) integrates dense retrieval with neural generation [1].\n\n#### Key Evidence & Insights\nVerified research demonstrates that grounded synthesis sign",
+    "debug_prompt_snippet": "=== EXECUTION METADATA ===\nStrategy: general_knowledge\nDecision: General Educational Lesson\nMode: general_knowledge\nTemplate: GENERAL_KNOWLEDGE\nDoc Count: 0\n\n=== SYSTEM PROMPT ===\nYou are EKIP, an expert educational AI tutor designed to help users deeply understand topics.\n\nStudent Question: \"What is Hydro chloric acid and where it is used.\"\n\nPedagogical Directives:\n- Target Learner Difficulty: BEGINNER\n- Educational Intent: concept_explanation\n- Requested Output Format: detailed_explanation\n- Source Strategy: general_knowledge\n\nVERIFIED KNOWLEDGE EVIDENCE:\nNo external evidence collected.\n\n\nPE",
+    "categories_in_edu_res": {
+      "uploaded_notes": 0,
+      "trusted_web": 6,
+      "wikipedia": 0,
+      "research": 5,
+      "books": 0,
+      "videos": 5,
+      "code_examples": 0
+    }
+  },
+  {
+    "test_id": "TEST E",
+    "query": "Explain Transformers in detail using my uploaded document and external sources.",
+    "intent": "concept_explanation",
+    "source_strategy": "document_augmented",
+    "selected_sources": [
+      "internal_document",
+      "general_ai",
+      "wikipedia"
+    ],
+    "doc_usage_mode": "required",
+    "dispatched_provider_counts": {
+      "mock_groq": 1,
+      "wikipedia": 5
+    },
+    "total_sources_retrieved": 6,
+    "response_status": "SUCCESS",
+    "agent_trace": [
+      "\ud83d\ude80 Orchestrator started request 05b95099",
+      "\ud83e\udde0 Planner Source Strategy: document_augmented",
+      "\ud83d\udd0d RetrievalAgent (Planner requested internal documents)",
+      "\ud83c\udf10 Multi-Source Dispatcher fetched 6 items across providers: ['wikipedia', 'mock_groq']",
+      "\u26a0\ufe0f Document retrieval returned 0 chunks -> Automatic Downgrade to GENERAL_KNOWLEDGE",
+      "\ud83d\udee1\ufe0f ValidationAgent",
+      "\ud83d\udee1\ufe0f Validation completed (Evidence Faithfulness: N/A (General Knowledge), Mode: web)",
+      "\u23f1\ufe0f Stage breakdown (ms): {'llm_synthesis_ms': 0.03, 'validation_ms': 0.12, 'memory_persistence_ms': 0.33}"
+    ],
+    "content_preview": "### Educational Guide: Explain Transformers in detail using my uploaded document and external sources.\n\nRetrieval-Augmented Generation (RAG) integrates dense retrieval with neural generation [1].\n\n#### Key Evidence & Insights\nVerified research demonstrates that grounded synthesis significantly mitig",
+    "debug_prompt_snippet": "=== EXECUTION METADATA ===\nStrategy: general_knowledge\nDecision: General Educational Lesson\nMode: general_knowledge\nTemplate: GENERAL_KNOWLEDGE\nDoc Count: 0\n\n=== SYSTEM PROMPT ===\nYou are EKIP, an expert educational AI tutor designed to help users deeply understand topics.\n\nStudent Question: \"What is Hydro chloric acid and where it is used.\"\n\nPedagogical Directives:\n- Target Learner Difficulty: BEGINNER\n- Educational Intent: concept_explanation\n- Requested Output Format: detailed_explanation\n- Source Strategy: general_knowledge\n\nVERIFIED KNOWLEDGE EVIDENCE:\nNo external evidence collected.\n\n\nPE",
+    "categories_in_edu_res": {
+      "uploaded_notes": 0,
+      "trusted_web": 1,
+      "wikipedia": 5,
+      "research": 0,
+      "books": 0,
+      "videos": 0,
+      "code_examples": 0
+    }
+  },
+  {
+    "test_id": "TEST F",
+    "query": "Answer strictly according to my uploaded document.",
+    "intent": "concept_explanation",
+    "source_strategy": "document_only",
+    "selected_sources": [
+      "internal_document"
+    ],
+    "doc_usage_mode": "required",
+    "dispatched_provider_counts": {
+      "unknown": 3
+    },
+    "total_sources_retrieved": 3,
+    "response_status": "SUCCESS",
+    "agent_trace": [
+      "\ud83d\ude80 Orchestrator started request 49cd591c",
+      "\ud83e\udde0 Planner Source Strategy: document_only",
+      "\ud83d\udd0d RetrievalAgent (Planner requested internal documents)",
+      "\u26a0\ufe0f Document retrieval returned 0 chunks -> Automatic Downgrade to GENERAL_KNOWLEDGE",
+      "\ud83c\udf10 Orchestrator Web Search Fallback",
+      "\ud83d\udee1\ufe0f ValidationAgent",
+      "\ud83d\udee1\ufe0f Validation completed (Evidence Faithfulness: N/A (General Knowledge), Mode: web)",
+      "\u23f1\ufe0f Stage breakdown (ms): {'llm_synthesis_ms': 0.03, 'validation_ms': 0.09, 'memory_persistence_ms': 2.0}"
+    ],
+    "content_preview": "### Educational Guide: Answer strictly according to my uploaded document.\n\nRetrieval-Augmented Generation (RAG) integrates dense retrieval with neural generation [1].\n\n#### Key Evidence & Insights\nVerified research demonstrates that grounded synthesis significantly mitigates model hallucination [1].",
+    "debug_prompt_snippet": "=== EXECUTION METADATA ===\nStrategy: general_knowledge\nDecision: General Educational Lesson\nMode: general_knowledge\nTemplate: GENERAL_KNOWLEDGE\nDoc Count: 0\n\n=== SYSTEM PROMPT ===\nYou are EKIP, an expert educational AI tutor designed to help users deeply understand topics.\n\nStudent Question: \"What is Hydro chloric acid and where it is used.\"\n\nPedagogical Directives:\n- Target Learner Difficulty: BEGINNER\n- Educational Intent: concept_explanation\n- Requested Output Format: detailed_explanation\n- Source Strategy: general_knowledge\n\nVERIFIED KNOWLEDGE EVIDENCE:\nNo external evidence collected.\n\n\nPE",
+    "categories_in_edu_res": {
+      "uploaded_notes": 0,
+      "trusted_web": 3,
+      "wikipedia": 0,
+      "research": 0,
+      "books": 0,
+      "videos": 0,
+      "code_examples": 0
+    }
+  }
+]

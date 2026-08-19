@@ -68,7 +68,7 @@ class TestEvidenceDrivenRAG(unittest.TestCase):
             sources=[sample_doc],
             metadata={
                 "provider": "groq",
-                "model": "llama-3.3-70b-versatile",
+                "model": "groq/compound",
                 "latency_ms": 500,
                 "tokens": 100,
                 "fallback_occurred": False,
@@ -112,7 +112,7 @@ class TestEvidenceDrivenRAG(unittest.TestCase):
             sources=[web_doc],
             metadata={
                 "provider": "groq",
-                "model": "llama-3.3-70b-versatile",
+                "model": "groq/compound",
                 "latency_ms": 600,
                 "tokens": 120,
                 "fallback_occurred": False,
@@ -163,7 +163,7 @@ class TestEvidenceDrivenRAG(unittest.TestCase):
             sources=[sample_doc],
             metadata={
                 "provider": "groq",
-                "model": "llama-3.3-70b-versatile",
+                "model": "groq/compound",
                 "latency_ms": 1200,
                 "tokens": 150,
                 "fallback_occurred": True,
@@ -219,12 +219,13 @@ class TestEvidenceDrivenRAG(unittest.TestCase):
             {"content": "Web info", "source_file": "🌐 Web Result", "page": "https://example.com", "chunk_id": "web_123"}
         ]
 
-        prompt, inputs, intent, docs_res, query, source_mode = synthesis._prepare_prompt_and_context({
+        res = synthesis._prepare_prompt_and_context({
             "query": "Test query",
             "documents": docs,
             "intent": "QA",
             "source_mode": "documents+web"
         })
+        prompt, inputs = res[0], res[1]
 
         context_str = inputs["context"]
         self.assertIn("### INDEXED DOCUMENT SOURCES:", context_str)

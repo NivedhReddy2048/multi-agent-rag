@@ -15,7 +15,8 @@ class MistralProvider(BaseLLMProvider):
         super().__init__("mistral", primary_model, fallback_model, api_key)
 
     def get_client(self, model_name: str, temperature: float = 0.1, max_tokens: int = 4096, timeout: float = 10.0):
-        cache_key = (model_name, temperature, max_tokens, timeout)
+        effective_timeout = int(max(1, round(timeout)))
+        cache_key = (model_name, temperature, max_tokens, effective_timeout)
         if cache_key in self.client_cache:
             return self.client_cache[cache_key]
 
@@ -24,7 +25,8 @@ class MistralProvider(BaseLLMProvider):
             api_key=self.api_key,
             temperature=temperature,
             max_tokens=max_tokens,
-            timeout=timeout,
+            timeout=effective_timeout,
+            max_retries=1,
         )
         self.client_cache[cache_key] = client
         return client

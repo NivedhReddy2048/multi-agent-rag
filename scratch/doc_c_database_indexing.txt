@@ -1,0 +1,1 @@
+B-Tree and B+Tree indexing structures in relational databases provide O(log N) lookup time for range queries. Write-Ahead Logging (WAL) ensures ACID durability before data pages are flushed to storage media.

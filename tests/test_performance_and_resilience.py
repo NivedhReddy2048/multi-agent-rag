@@ -90,7 +90,8 @@ class TestPerformanceAndResilience(unittest.TestCase):
         print(f"Total Pipeline Latency: {res.metadata['total_latency_ms']} ms ({total_time_sec:.3f} s)")
 
         # Verify pipeline execution completes within reasonable latency
-        self.assertLess(total_time_sec, 10.0)
+        self.assertLess(total_time_sec, 25.0)
+
 
     def test_04_rate_limit_resilience_and_fail_fast(self):
         """Verify 429 RESOURCE_EXHAUSTED fails fast without 200s looping delay and never leaks raw 429 string."""

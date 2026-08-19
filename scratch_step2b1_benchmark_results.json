@@ -1,0 +1,169 @@
+[
+  {
+    "case_id": "A. Normal General Knowledge",
+    "query": "Explain the core concepts of Transformer architectures in Machine Learning.",
+    "planner_strategy": "general_knowledge",
+    "runtime_strategy": "documents",
+    "prompt_builder_used": true,
+    "prompt_length_chars": 2906,
+    "final_provider": "groq",
+    "final_model": "openai/gpt-oss-20b",
+    "fallback_occurred": true,
+    "fallback_chain": [
+      "gemini",
+      "groq"
+    ],
+    "total_wall_clock_duration_sec": 6.12,
+    "response_length_chars": 7746,
+    "success": true,
+    "attempts_detail": [
+      {
+        "provider": "Gemini",
+        "model": "gemini-2.5-flash",
+        "attempt_number": 1,
+        "duration_ms": 2002.26,
+        "timeout_budget_seconds": 15.0,
+        "result": "FAILED",
+        "failure_reason": "Error calling model 'gemini-2.5-flash' (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': ",
+        "skipped_reason": ""
+      },
+      {
+        "provider": "Groq",
+        "model": "openai/gpt-oss-20b",
+        "attempt_number": 2,
+        "duration_ms": 4108.57,
+        "timeout_budget_seconds": 13.0,
+        "result": "SUCCESS",
+        "failure_reason": "",
+        "skipped_reason": ""
+      }
+    ]
+  },
+  {
+    "case_id": "B. Simple Query",
+    "query": "What is overfitting in machine learning?",
+    "planner_strategy": "general_knowledge",
+    "runtime_strategy": "documents",
+    "prompt_builder_used": true,
+    "prompt_length_chars": 2644,
+    "final_provider": "groq",
+    "final_model": "openai/gpt-oss-20b",
+    "fallback_occurred": false,
+    "fallback_chain": [
+      "groq"
+    ],
+    "total_wall_clock_duration_sec": 2.63,
+    "response_length_chars": 5296,
+    "success": true,
+    "attempts_detail": [
+      {
+        "provider": "Groq",
+        "model": "openai/gpt-oss-20b",
+        "attempt_number": 1,
+        "duration_ms": 2630.47,
+        "timeout_budget_seconds": 15.0,
+        "result": "SUCCESS",
+        "failure_reason": "",
+        "skipped_reason": ""
+      }
+    ]
+  },
+  {
+    "case_id": "C. Another General Query",
+    "query": "Explain how a database index improves query performance.",
+    "planner_strategy": "general_knowledge",
+    "runtime_strategy": "documents",
+    "prompt_builder_used": true,
+    "prompt_length_chars": 2668,
+    "final_provider": "groq",
+    "final_model": "openai/gpt-oss-20b",
+    "fallback_occurred": false,
+    "fallback_chain": [
+      "groq"
+    ],
+    "total_wall_clock_duration_sec": 2.73,
+    "response_length_chars": 5196,
+    "success": true,
+    "attempts_detail": [
+      {
+        "provider": "Groq",
+        "model": "openai/gpt-oss-20b",
+        "attempt_number": 1,
+        "duration_ms": 2732.5,
+        "timeout_budget_seconds": 15.0,
+        "result": "SUCCESS",
+        "failure_reason": "",
+        "skipped_reason": ""
+      }
+    ]
+  },
+  {
+    "case_id": "D. Strict Document Query",
+    "query": "Using only my uploaded document, explain the architecture described in it.",
+    "planner_strategy": "document_only",
+    "runtime_strategy": "documents",
+    "prompt_builder_used": true,
+    "prompt_length_chars": 2543,
+    "final_provider": "cohere",
+    "final_model": "command-r-08-2024",
+    "fallback_occurred": true,
+    "fallback_chain": [
+      "groq",
+      "cohere"
+    ],
+    "total_wall_clock_duration_sec": 65.31,
+    "response_length_chars": 5135,
+    "success": true,
+    "attempts_detail": [
+      {
+        "provider": "Groq",
+        "model": "openai/gpt-oss-20b",
+        "attempt_number": 1,
+        "duration_ms": 10831.22,
+        "timeout_budget_seconds": 15.0,
+        "result": "FAILED",
+        "failure_reason": "Error code: 429 - {'error': {'message': 'Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01kyksx2",
+        "skipped_reason": ""
+      },
+      {
+        "provider": "Cohere",
+        "model": "command-r-08-2024",
+        "attempt_number": 2,
+        "duration_ms": 54474.1,
+        "timeout_budget_seconds": 4.17,
+        "result": "SUCCESS",
+        "failure_reason": "",
+        "skipped_reason": ""
+      }
+    ]
+  },
+  {
+    "case_id": "E. Failure/Fallback Simulation",
+    "query": "Explain how distributed caching works.",
+    "planner_strategy": "general_knowledge",
+    "runtime_strategy": "documents",
+    "prompt_builder_used": true,
+    "prompt_length_chars": 2650,
+    "final_provider": "NONE",
+    "final_model": "none",
+    "fallback_occurred": false,
+    "fallback_chain": [
+      "cohere"
+    ],
+    "total_wall_clock_duration_sec": 301.13,
+    "response_length_chars": 0,
+    "success": false,
+    "attempts_detail": [
+      {
+        "provider": "Cohere",
+        "model": "command-r-08-2024",
+        "attempt_number": 1,
+        "duration_ms": 301124.99,
+        "timeout_budget_seconds": 15.0,
+        "result": "FAILED",
+        "failure_reason": "The read operation timed out",
+        "skipped_reason": ""
+      }
+    ]
+  }
+]

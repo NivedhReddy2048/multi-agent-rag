@@ -1,0 +1,1 @@
+DocConfA: The EKIP-Alpha architecture uses 8 attention heads in total.

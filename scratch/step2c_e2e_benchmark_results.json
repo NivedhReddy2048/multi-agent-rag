@@ -1,0 +1,61 @@
+[
+  {
+    "scenario": "A (Transformer Query + Mixed Chunks)",
+    "planner_strategy": "general_knowledge",
+    "runtime_strategy": "GENERAL_KNOWLEDGE",
+    "retrieved_chunk_count": 5,
+    "rejected_chunk_count": 4,
+    "surviving_evidence_count": 1,
+    "final_evidence_char_count": 104,
+    "latency_ms": 5.69,
+    "strict_grounding_preserved": true,
+    "irrelevant_sources_in_prompt": false,
+    "surviving_sources": [
+      "transformer_paper.pdf"
+    ]
+  },
+  {
+    "scenario": "B (General Query + Unrelated Uploaded Docs)",
+    "planner_strategy": "general_knowledge",
+    "runtime_strategy": "GENERAL_KNOWLEDGE",
+    "retrieved_chunk_count": 2,
+    "rejected_chunk_count": 2,
+    "surviving_evidence_count": 0,
+    "final_evidence_char_count": 0,
+    "latency_ms": 0.28,
+    "strict_grounding_preserved": true,
+    "irrelevant_sources_in_prompt": false,
+    "surviving_sources": []
+  },
+  {
+    "scenario": "C (Strict Document Query + Irrelevant Document)",
+    "planner_strategy": "document_only",
+    "runtime_strategy": "DOCUMENT_ONLY",
+    "retrieved_chunk_count": 1,
+    "rejected_chunk_count": 1,
+    "surviving_evidence_count": 0,
+    "final_evidence_char_count": 0,
+    "latency_ms": 0.2,
+    "strict_grounding_preserved": true,
+    "irrelevant_sources_in_prompt": false,
+    "surviving_sources": []
+  },
+  {
+    "scenario": "D (Multiple Relevant Docs Exceeding Budget)",
+    "planner_strategy": "document_only",
+    "runtime_strategy": "DOCUMENT_ONLY",
+    "retrieved_chunk_count": 6,
+    "rejected_chunk_count": 0,
+    "surviving_evidence_count": 4,
+    "final_evidence_char_count": 1889,
+    "latency_ms": 0.29,
+    "strict_grounding_preserved": true,
+    "irrelevant_sources_in_prompt": false,
+    "surviving_sources": [
+      "cnn.pdf",
+      "rnn.pdf",
+      "transformers.pdf",
+      "gnn.pdf"
+    ]
+  }
+]

@@ -25,7 +25,7 @@ class ProviderRegistry:
             "mistral": MistralProvider(cfg.MISTRAL_MODEL, cfg.MISTRAL_FALLBACK_MODEL, cfg.MISTRAL_API_KEY),
         }
 
-        self.priority_order: List[str] = getattr(cfg, "PROVIDER_PRIORITY", ["gemini", "groq", "cohere", "mistral"])
+        self.priority_order: List[str] = getattr(cfg, "PROVIDER_PRIORITY", ["groq", "gemini", "mistral", "cohere"])
         logger.info(f"ProviderRegistry initialized with priority order: {self.priority_order}")
 
     def get_provider(self, name: str) -> Optional[BaseLLMProvider]:

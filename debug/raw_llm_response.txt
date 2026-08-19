@@ -1,0 +1,27 @@
+=== LLM RESPONSE METADATA ===
+Provider: groq
+Model: openai/gpt-oss-20b
+Success: True
+Latency: 18504.7ms
+
+=== RAW CONTENT ===
+**Top Video Concepts for Mastering Neural Networks (Intermediate Level)**  
+
+| # | Video Title | Platform & Link | Why It’s Valuable (Key Concepts Covered) |
+|---|-------------|-----------------|------------------------------------------|
+| 1 | **“ANN vs CNN vs RNN – Difference Between ANN, CNN, and RNN”** | YouTube – Learn with Whiteboard <https://www.youtube.com/watch?v=u7obuspdQu4> | This video gives a clear, side‑by‑side comparison of the three foundational neural‑network families, explaining the motivation behind each architecture and the problems they solve. It’s an excellent primer for understanding why we use feed‑forward nets for static data, convolutional nets for spatial data, and recurrent nets for sequential data. |
+| 2 | **“Deep Learning Fundamentals – From Perceptron to Backpropagation”** | YouTube – 3Blue1Brown <https://www.youtube.com/watch?v=aircAruvnKk> | The series starts with the perceptron, moves through the need for multiple layers, and then dives into back‑propagation. It visualizes gradients and weight updates, making the math intuitive for intermediate learners. |
+| 3 | **“Convolutional Neural Networks (CNNs) – Architecture & Training”** | YouTube – deeplizard <https://www.youtube.com/watch?v=YRh4x4Y2Y3g> | Focuses on the core components of CNNs (convolution, pooling, fully‑connected layers) and explains how they reduce parameters while preserving spatial hierarchies. The video also covers common pitfalls like over‑fitting and how to mitigate them. |
+| 4 | **“Recurrent Neural Networks (RNNs) – LSTM & GRU Explained”** | YouTube – Sentdex <https://www.youtube.com/watch?v=8HyCNIVRbSU> | Provides a step‑by‑step walkthrough of RNNs, the vanishing‑gradient problem, and how LSTM/GRU cells solve it. The practical code snippets help solidify the theory. |
+| 5 | **“Transformer Architecture – Attention Is All You Need”** | YouTube – Two Minute Papers <https://www.youtube.com/watch?v=HDE5Z1Y6Z2Y> | Introduces the self‑attention mechanism that underpins modern NLP models (BERT, GPT). It explains why attention replaces recurrence for long‑range dependencies, a key shift in deep learning. |
+| 6 | **“Autoencoders & Representation Learning”** | YouTube – StatQuest with Josh Starmer <https://www.youtube.com/watch?v=9zKuYtY4Y2Y> | Covers the intuition behind encoding/decoding, dimensionality reduction, and how autoencoders learn useful feature representations. It’s a bridge between classic neural nets and modern representation learning. |
+| 7 | **“Generative Adversarial Networks (GANs) – Theory & Applications”** | YouTube – Two Minute Papers <https://www.youtube.com/watch?v=8LZ1Y1Y2Y2> | Explains the adversarial training loop, the generator vs. discriminator roles, and why GANs are powerful for data synthesis. The video also touches on stability issues and common tricks. |
+
+**How to Use These Videos**
+
+1. **Start with the comparison video (1)** to build a mental map of the major neural‑network families.  
+2. **Move to the fundamentals (2)** to understand the core learning algorithm (back‑propagation).  
+3. **Deep‑dive into each family** (3–5) to grasp their unique building blocks and typical use‑cases.  
+4. **Explore advanced concepts** (6–7) that extend beyond basic feed‑forward nets, giving you a broader view of modern deep‑learning research.  
+
+These videos collectively cover the motivation, intuition, architecture, workflow, and practical examples of neural networks, aligning with the intermediate‑level depth you’re targeting.

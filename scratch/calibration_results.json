@@ -1,0 +1,512 @@
+{
+  "statistics": {
+    "RELEVANT": {
+      "min": -3.0695,
+      "max": 10.2578,
+      "mean": 4.5493,
+      "median": 5.2071,
+      "std": 3.2578,
+      "p10": 0.8529,
+      "p25": 2.4785,
+      "p50": 5.2071,
+      "p75": 6.4992,
+      "p90": 7.8241
+    },
+    "BORDERLINE": {
+      "min": -11.3275,
+      "max": -1.8531,
+      "mean": -7.3203,
+      "median": -8.0521,
+      "std": 3.4305,
+      "p10": -10.8068,
+      "p25": -10.6244,
+      "p50": -8.0521,
+      "p75": -4.3251,
+      "p90": -2.9754
+    },
+    "IRRELEVANT": {
+      "min": -11.4505,
+      "max": -11.1053,
+      "mean": -11.3279,
+      "median": -11.3448,
+      "std": 0.0946,
+      "p10": -11.4396,
+      "p25": -11.3985,
+      "p50": -11.3448,
+      "p75": -11.2756,
+      "p90": -11.2198
+    },
+    "ALL": {
+      "min": -11.4505,
+      "max": 10.2578,
+      "mean": -4.372,
+      "median": -8.0521,
+      "std": 7.5557,
+      "p10": -11.3806,
+      "p25": -11.2891,
+      "p50": -8.0521,
+      "p75": 3.3018,
+      "p90": 6.0323
+    }
+  },
+  "threshold_sweep": [
+    {
+      "threshold": -2.0,
+      "TP": 14,
+      "FP": 1,
+      "TN": 24,
+      "FN": 1,
+      "precision": 0.9333,
+      "recall": 0.9333,
+      "f1": 0.9333,
+      "FPR": 0.04,
+      "FNR": 0.0667
+    },
+    {
+      "threshold": -1.0,
+      "TP": 14,
+      "FP": 0,
+      "TN": 25,
+      "FN": 1,
+      "precision": 1.0,
+      "recall": 0.9333,
+      "f1": 0.9655,
+      "FPR": 0.0,
+      "FNR": 0.0667
+    },
+    {
+      "threshold": -0.5,
+      "TP": 14,
+      "FP": 0,
+      "TN": 25,
+      "FN": 1,
+      "precision": 1.0,
+      "recall": 0.9333,
+      "f1": 0.9655,
+      "FPR": 0.0,
+      "FNR": 0.0667
+    },
+    {
+      "threshold": 0.0,
+      "TP": 14,
+      "FP": 0,
+      "TN": 25,
+      "FN": 1,
+      "precision": 1.0,
+      "recall": 0.9333,
+      "f1": 0.9655,
+      "FPR": 0.0,
+      "FNR": 0.0667
+    },
+    {
+      "threshold": 0.25,
+      "TP": 14,
+      "FP": 0,
+      "TN": 25,
+      "FN": 1,
+      "precision": 1.0,
+      "recall": 0.9333,
+      "f1": 0.9655,
+      "FPR": 0.0,
+      "FNR": 0.0667
+    },
+    {
+      "threshold": 0.5,
+      "TP": 14,
+      "FP": 0,
+      "TN": 25,
+      "FN": 1,
+      "precision": 1.0,
+      "recall": 0.9333,
+      "f1": 0.9655,
+      "FPR": 0.0,
+      "FNR": 0.0667
+    },
+    {
+      "threshold": 1.0,
+      "TP": 13,
+      "FP": 0,
+      "TN": 25,
+      "FN": 2,
+      "precision": 1.0,
+      "recall": 0.8667,
+      "f1": 0.9286,
+      "FPR": 0.0,
+      "FNR": 0.1333
+    },
+    {
+      "threshold": 2.0,
+      "TP": 11,
+      "FP": 0,
+      "TN": 25,
+      "FN": 4,
+      "precision": 1.0,
+      "recall": 0.7333,
+      "f1": 0.8462,
+      "FPR": 0.0,
+      "FNR": 0.2667
+    }
+  ],
+  "items": [
+    {
+      "id": "R1",
+      "category": "RELEVANT",
+      "query": "Explain the core concepts of Transformer architectures in Machine Learning.",
+      "chunk": "The Transformer architecture relies on a multi-head self-attention mechanism, allowing parallel processing of sequential text inputs without recurrent connections.",
+      "label": 1,
+      "raw_score": 2.9902451038360596,
+      "sigmoid_score": 0.9521314825157032
+    },
+    {
+      "id": "R2",
+      "category": "RELEVANT",
+      "query": "Explain the core concepts of Transformer architectures in Machine Learning.",
+      "chunk": "In Transformer models, Query, Key, and Value matrices are projected to compute dot-product self-attention weights across tokens.",
+      "label": 1,
+      "raw_score": -3.069537401199341,
+      "sigmoid_score": 0.04438144307017987
+    },
+    {
+      "id": "R3",
+      "category": "RELEVANT",
+      "query": "How does backpropagation work in neural networks?",
+      "chunk": "Backpropagation calculates gradients of the loss function with respect to weights using the chain rule, enabling gradient descent updates across layers.",
+      "label": 1,
+      "raw_score": 1.9666675329208374,
+      "sigmoid_score": 0.8772527227386898
+    },
+    {
+      "id": "R4",
+      "category": "RELEVANT",
+      "query": "What is B-tree indexing in relational databases?",
+      "chunk": "A B-tree index maintains balanced self-sorting node trees that allow logarithmic time searches, insertions, and deletions in database engines.",
+      "label": 1,
+      "raw_score": 7.08281135559082,
+      "sigmoid_score": 0.9991612940699152
+    },
+    {
+      "id": "R5",
+      "category": "RELEVANT",
+      "query": "Explain overfitting and underfitting in machine learning models.",
+      "chunk": "Overfitting occurs when a model learns noise and training set specifics, failing to generalize to unseen test data, whereas underfitting means the model is too simple.",
+      "label": 1,
+      "raw_score": 8.008443832397461,
+      "sigmoid_score": 0.9996674686508142
+    },
+    {
+      "id": "R6",
+      "category": "RELEVANT",
+      "query": "What is CPU round-robin scheduling in operating systems?",
+      "chunk": "Round-robin scheduling allocates a fixed time quantum to each process in the ready queue, context switching processes sequentially when their quantum expires.",
+      "label": 1,
+      "raw_score": 4.236412525177002,
+      "sigmoid_score": 0.985746721903896
+    },
+    {
+      "id": "R7",
+      "category": "RELEVANT",
+      "query": "Explain Convolutional Neural Networks (CNNs) for computer vision.",
+      "chunk": "CNNs utilize spatial convolution filters and pooling layers to extract hierarchical visual features such as edges, textures, and objects from images.",
+      "label": 1,
+      "raw_score": 0.7131143808364868,
+      "sigmoid_score": 0.6710889585600397
+    },
+    {
+      "id": "R8",
+      "category": "RELEVANT",
+      "query": "What is quantum entanglement in physics?",
+      "chunk": "Quantum entanglement is a phenomenon where physical states of two or more particles become interconnected such that measuring one instantaneously determines the other.",
+      "label": 1,
+      "raw_score": 10.257757186889648,
+      "sigmoid_score": 0.9999649169437007
+    },
+    {
+      "id": "R9",
+      "category": "RELEVANT",
+      "query": "Explain microservices architecture principles.",
+      "chunk": "Microservices architecture decomposes monolithic applications into independent, loosely coupled services communicating via APIs or event brokers.",
+      "label": 1,
+      "raw_score": 5.841175079345703,
+      "sigmoid_score": 0.997102990535686
+    },
+    {
+      "id": "R10",
+      "category": "RELEVANT",
+      "query": "What is Gradient Descent in deep learning?",
+      "chunk": "Gradient descent is an iterative optimization algorithm that updates parameter weights in the opposite direction of the loss function gradient to minimize error.",
+      "label": 1,
+      "raw_score": 5.55389404296875,
+      "sigmoid_score": 0.9961425884890796
+    },
+    {
+      "id": "R11",
+      "category": "RELEVANT",
+      "query": "Explain ACID properties in database transactions.",
+      "chunk": "ACID stands for Atomicity, Consistency, Isolation, and Durability, guaranteeing reliable processing of database transactions.",
+      "label": 1,
+      "raw_score": 5.207122325897217,
+      "sigmoid_score": 0.9945524253770082
+    },
+    {
+      "id": "R12",
+      "category": "RELEVANT",
+      "query": "What is the purpose of positional encoding in Transformers?",
+      "chunk": "Because Transformers process all tokens simultaneously without recurrence, positional encoding adds sinusoidal vectors to token embeddings to encode sequence order.",
+      "label": 1,
+      "raw_score": 7.547535419464111,
+      "sigmoid_score": 0.999472869645913
+    },
+    {
+      "id": "R13",
+      "category": "RELEVANT",
+      "query": "Explain virtual memory and page faults in OS.",
+      "chunk": "Virtual memory abstracts physical RAM using page tables; when a process accesses a page not present in RAM, a hardware page fault triggers page loading from disk.",
+      "label": 1,
+      "raw_score": 5.915570259094238,
+      "sigmoid_score": 0.9973101335937122
+    },
+    {
+      "id": "R14",
+      "category": "RELEVANT",
+      "query": "What is residual connection in ResNet architectures?",
+      "chunk": "Residual connections add skip identity mappings around convolutional blocks, allowing gradients to flow directly during backpropagation and enabling deep networks.",
+      "label": 1,
+      "raw_score": 4.926159858703613,
+      "sigmoid_score": 0.9927979385411185
+    },
+    {
+      "id": "R15",
+      "category": "RELEVANT",
+      "query": "Explain REST API design principles.",
+      "chunk": "RESTful APIs use HTTP methods (GET, POST, PUT, DELETE) and stateless resource representations (JSON) to facilitate communication between web clients and servers.",
+      "label": 1,
+      "raw_score": 1.0626981258392334,
+      "sigmoid_score": 0.7432058229346713
+    },
+    {
+      "id": "I1",
+      "category": "IRRELEVANT",
+      "query": "Explain the core concepts of Transformer architectures in Machine Learning.",
+      "chunk": "B-tree indexing structures optimize relational database query execution speeds by balancing leaf node pointers.",
+      "label": 0,
+      "raw_score": -11.1052827835083,
+      "sigmoid_score": 1.503247321117966e-05
+    },
+    {
+      "id": "I2",
+      "category": "IRRELEVANT",
+      "query": "Explain the core concepts of Transformer architectures in Machine Learning.",
+      "chunk": "Microservices communicate asynchronously via AMQP event buses, API gateways, and distributed message queues.",
+      "label": 0,
+      "raw_score": -11.248918533325195,
+      "sigmoid_score": 1.3021202668299482e-05
+    },
+    {
+      "id": "I3",
+      "category": "IRRELEVANT",
+      "query": "How does backpropagation work in neural networks?",
+      "chunk": "Operating system CPU scheduling uses round-robin and multi-level feedback queues to manage process prioritization.",
+      "label": 0,
+      "raw_score": -11.276342391967773,
+      "sigmoid_score": 1.2668967470216117e-05
+    },
+    {
+      "id": "I4",
+      "category": "IRRELEVANT",
+      "query": "What is B-tree indexing in relational databases?",
+      "chunk": "Weekly grocery shopping list: apples, whole milk, organic sourdough bread, olive oil, and coffee beans.",
+      "label": 0,
+      "raw_score": -11.363214492797852,
+      "sigmoid_score": 1.1614849981937952e-05
+    },
+    {
+      "id": "I5",
+      "category": "IRRELEVANT",
+      "query": "Explain overfitting and underfitting in machine learning models.",
+      "chunk": "Baking chocolate chip cookies requires preheating oven to 375 degrees Fahrenheit and mixing butter with granulated sugar.",
+      "label": 0,
+      "raw_score": -11.27557373046875,
+      "sigmoid_score": 1.2678709237856918e-05
+    },
+    {
+      "id": "I6",
+      "category": "IRRELEVANT",
+      "query": "What is CPU round-robin scheduling in operating systems?",
+      "chunk": "The capital city of France is Paris, famous for the Eiffel Tower, the Louvre museum, and Notre-Dame Cathedral.",
+      "label": 0,
+      "raw_score": -11.333263397216797,
+      "sigmoid_score": 1.1967985296823667e-05
+    },
+    {
+      "id": "I7",
+      "category": "IRRELEVANT",
+      "query": "Explain Convolutional Neural Networks (CNNs) for computer vision.",
+      "chunk": "Financial accounting rules state that double-entry bookkeeping requires debit and credit entries to balance for every transaction.",
+      "label": 0,
+      "raw_score": -11.440347671508789,
+      "sigmoid_score": 1.0752648902436131e-05
+    },
+    {
+      "id": "I8",
+      "category": "IRRELEVANT",
+      "query": "What is quantum entanglement in physics?",
+      "chunk": "PostgreSQL database configuration settings for max_connections, shared_buffers, and work_mem tuning.",
+      "label": 0,
+      "raw_score": -11.344799041748047,
+      "sigmoid_score": 1.1830721739962212e-05
+    },
+    {
+      "id": "I9",
+      "category": "IRRELEVANT",
+      "query": "Explain microservices architecture principles.",
+      "chunk": "Photosynthesis is the process by which green plants convert light energy into chemical energy stored in glucose molecules.",
+      "label": 0,
+      "raw_score": -11.27565860748291,
+      "sigmoid_score": 1.267763316618372e-05
+    },
+    {
+      "id": "I10",
+      "category": "IRRELEVANT",
+      "query": "What is Gradient Descent in deep learning?",
+      "chunk": "Car maintenance guidelines recommend changing engine oil every 5000 miles and inspecting tire inflation pressure monthly.",
+      "label": 0,
+      "raw_score": -11.450469970703125,
+      "sigmoid_score": 1.0644357535107017e-05
+    },
+    {
+      "id": "I11",
+      "category": "IRRELEVANT",
+      "query": "Explain ACID properties in database transactions.",
+      "chunk": "Solar power systems convert sunlight into electricity using photovoltaic solar panels connected to inverter units.",
+      "label": 0,
+      "raw_score": -11.420854568481445,
+      "sigmoid_score": 1.0964305315216143e-05
+    },
+    {
+      "id": "I12",
+      "category": "IRRELEVANT",
+      "query": "What is the purpose of positional encoding in Transformers?",
+      "chunk": "B-tree indexing maintains balanced leaf nodes for disk block retrieval in file systems and relational engines.",
+      "label": 0,
+      "raw_score": -11.200323104858398,
+      "sigmoid_score": 1.366959171989929e-05
+    },
+    {
+      "id": "I13",
+      "category": "IRRELEVANT",
+      "query": "Explain virtual memory and page faults in OS.",
+      "chunk": "Supervised learning algorithm classification using decision tree splitting criteria based on Gini impurity.",
+      "label": 0,
+      "raw_score": -11.368766784667969,
+      "sigmoid_score": 1.1550540387723369e-05
+    },
+    {
+      "id": "I14",
+      "category": "IRRELEVANT",
+      "query": "What is residual connection in ResNet architectures?",
+      "chunk": "Tennis grand slam tournaments include the Australian Open, French Open, Wimbledon, and US Open.",
+      "label": 0,
+      "raw_score": -11.376115798950195,
+      "sigmoid_score": 1.1465967419346906e-05
+    },
+    {
+      "id": "I15",
+      "category": "IRRELEVANT",
+      "query": "Explain REST API design principles.",
+      "chunk": "Quantum mechanical wave function collapse under Copenhagen interpretation of subatomic observation.",
+      "label": 0,
+      "raw_score": -11.438592910766602,
+      "sigmoid_score": 1.0771533589571862e-05
+    },
+    {
+      "id": "B1",
+      "category": "BORDERLINE",
+      "query": "Explain Transformer architecture in Machine Learning.",
+      "chunk": "Deep learning architectures have evolved from early multilayer perceptrons to complex deep networks used in artificial intelligence applications.",
+      "label": 0,
+      "raw_score": -4.148102760314941,
+      "sigmoid_score": 0.015548770962542703
+    },
+    {
+      "id": "B2",
+      "category": "BORDERLINE",
+      "query": "Explain Transformer architecture in Machine Learning.",
+      "chunk": "Natural Language Processing utilizes tokenization, stemming, and vector embeddings to represent text corpus inputs.",
+      "label": 0,
+      "raw_score": -10.749002456665039,
+      "sigmoid_score": 2.146635090024145e-05
+    },
+    {
+      "id": "B3",
+      "category": "BORDERLINE",
+      "query": "What is B-tree indexing in relational databases?",
+      "chunk": "Database management systems store data on disk and utilize buffer pools to manage memory caches efficiently.",
+      "label": 0,
+      "raw_score": -10.348295211791992,
+      "sigmoid_score": 3.2046350223766984e-05
+    },
+    {
+      "id": "B4",
+      "category": "BORDERLINE",
+      "query": "How does backpropagation work in neural networks?",
+      "chunk": "Artificial neural networks consist of connected nodes or artificial neurons organized into input, hidden, and output layers.",
+      "label": 0,
+      "raw_score": -6.592933654785156,
+      "sigmoid_score": 0.0013681405387109024
+    },
+    {
+      "id": "B5",
+      "category": "BORDERLINE",
+      "query": "Explain overfitting and underfitting in machine learning models.",
+      "chunk": "Machine learning model evaluation relies on splitting datasets into training, validation, and test subsets.",
+      "label": 0,
+      "raw_score": -1.8531033992767334,
+      "sigmoid_score": 0.13550893397309882
+    },
+    {
+      "id": "B6",
+      "category": "BORDERLINE",
+      "query": "What is CPU round-robin scheduling in operating systems?",
+      "chunk": "Operating systems manage hardware resources including CPU, RAM, disk storage, and input-output peripheral devices.",
+      "label": 0,
+      "raw_score": -4.856022834777832,
+      "sigmoid_score": 0.007721288024700452
+    },
+    {
+      "id": "B7",
+      "category": "BORDERLINE",
+      "query": "What is quantum entanglement in physics?",
+      "chunk": "Quantum mechanics explores subatomic physical phenomena including wave-particle duality and uncertainty principles.",
+      "label": 0,
+      "raw_score": -3.1000661849975586,
+      "sigmoid_score": 0.04310452495738458
+    },
+    {
+      "id": "B8",
+      "category": "BORDERLINE",
+      "query": "Explain microservices architecture principles.",
+      "chunk": "Software engineering design patterns provide reusable templates for object-oriented component architecture.",
+      "label": 0,
+      "raw_score": -10.716453552246094,
+      "sigmoid_score": 2.2176536797155858e-05
+    },
+    {
+      "id": "B9",
+      "category": "BORDERLINE",
+      "query": "Explain REST API design principles.",
+      "chunk": "Web development relies on client-server networking protocols including HTTP, HTTPS, and TCP/IP sockets.",
+      "label": 0,
+      "raw_score": -11.327459335327148,
+      "sigmoid_score": 1.2037649359711601e-05
+    },
+    {
+      "id": "B10",
+      "category": "BORDERLINE",
+      "query": "What is residual connection in ResNet architectures?",
+      "chunk": "Deep neural networks suffer from vanishing gradient problems when trained with many hidden layers.",
+      "label": 0,
+      "raw_score": -9.51120662689209,
+      "sigmoid_score": 7.401219790211888e-05
+    }
+  ]
+}

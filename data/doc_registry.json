@@ -1,14 +1,20 @@
 {
-  "Coverletter_stripe.pdf": {
-    "chunks": 3,
-    "pages": 1,
-    "uploaded": "2026-07-27T15:52:04.049513",
-    "size_mb": 0.04
+  "Deep_Solar_System_6_Page_Detailed_Report.pdf": {
+    "chunks": 23,
+    "pages": 6,
+    "uploaded": "2026-08-15T22:59:37.500480",
+    "size_mb": 0.01
   },
-  "ai_arch.txt": {
-    "chunks": 1,
-    "pages": 1,
-    "uploaded": "2026-07-27T23:09:29.744608",
-    "size_mb": 0.0
+  "MarsReview_merged.pdf": {
+    "chunks": 298,
+    "pages": 109,
+    "uploaded": "2026-08-15T23:00:24.927776",
+    "size_mb": 7.67
+  },
+  "venus.pdf": {
+    "chunks": 31,
+    "pages": 4,
+    "uploaded": "2026-08-15T23:03:10.825000",
+    "size_mb": 0.56
   }
 }

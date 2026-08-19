@@ -1,9 +1,5 @@
-"""EKIP API Package.
+"""EKIP REST API Router Package."""
 
-Changes made:
-- Exported PlatformAPI for endpoint monitoring.
-"""
+from api.router import APIRouter, api_router
 
-from .endpoints import PlatformAPI
-
-__all__ = ["PlatformAPI"]
+__all__ = ["APIRouter", "api_router"]

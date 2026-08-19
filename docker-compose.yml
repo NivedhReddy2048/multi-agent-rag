@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  ekip-platform:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ekip_app
+    ports:
+      - "8501:8501"
+    environment:
+      - ENV_MODE=production
+      - DUCKDUCKGO_ENABLED=true
+      - ENABLE_WEB_SEARCH=true
+      - MAX_CONCURRENT_PROVIDER_TASKS=50
+      - CIRCUIT_BREAKER_THRESHOLD=3
+    volumes:
+      - ekip_data:/app/data
+    restart: unless-stopped
+
+volumes:
+  ekip_data:

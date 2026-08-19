@@ -1,0 +1,1 @@
+The EKIP-MiniTransformer is a specialized 6-layer Transformer encoder-decoder architecture. It operates with 8 multi-head attention mechanisms, a hidden embedding dimension of d_model = 512, and uses Sinusoidal Positional Encodings. The primary training objective is Masked Language Modeling (MLM) combined with Next Sentence Prediction (NSP).

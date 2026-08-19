@@ -1,0 +1,253 @@
+{
+  "scenarios": [
+    {
+      "id": "TEST_A",
+      "name": "General Informative Question",
+      "query": "Explain how transformers work in detail. Include intuition, architecture, self-attention, training, and a simple example.",
+      "planner_strategy": "general_knowledge",
+      "selected_sources": [
+        "general_ai",
+        "wikipedia"
+      ],
+      "provider_counts": {
+        "mock_groq": 1,
+        "wikipedia": 3
+      },
+      "ui_distribution": {
+        "uploaded_notes": 0,
+        "trusted_web": 1,
+        "wikipedia": 3,
+        "research": 0,
+        "books": 0,
+        "videos": 0,
+        "code_examples": 0
+      },
+      "response_status": "SUCCESS",
+      "latency_ms": 2768.55,
+      "failures": [],
+      "quality_score": 4.88,
+      "pass": true
+    },
+    {
+      "id": "TEST_B",
+      "name": "Document + External Knowledge",
+      "query": "Explain transformers using my uploaded document, but also add important information from reliable external sources.",
+      "planner_strategy": "document_augmented",
+      "selected_sources": [
+        "internal_document",
+        "general_ai",
+        "wikipedia"
+      ],
+      "provider_counts": {
+        "mock_groq": 1,
+        "wikipedia": 5,
+        "uploaded_documents": 2
+      },
+      "ui_distribution": {
+        "uploaded_notes": 2,
+        "trusted_web": 1,
+        "wikipedia": 5,
+        "research": 0,
+        "books": 0,
+        "videos": 0,
+        "code_examples": 0
+      },
+      "response_status": "SUCCESS",
+      "latency_ms": 2694.67,
+      "failures": [],
+      "quality_score": 4.88,
+      "pass": true
+    },
+    {
+      "id": "TEST_C",
+      "name": "Strict Document Only",
+      "query": "According to my uploaded document only, explain the architecture.",
+      "planner_strategy": "document_only",
+      "selected_sources": [
+        "internal_document"
+      ],
+      "provider_counts": {
+        "uploaded_documents": 2
+      },
+      "ui_distribution": {
+        "uploaded_notes": 2,
+        "trusted_web": 0,
+        "wikipedia": 0,
+        "research": 0,
+        "books": 0,
+        "videos": 0,
+        "code_examples": 0
+      },
+      "response_status": "SUCCESS",
+      "latency_ms": 6.12,
+      "failures": [],
+      "quality_score": 4.88,
+      "pass": true
+    },
+    {
+      "id": "TEST_D",
+      "name": "Research Paper Discovery",
+      "query": "Explain the problem of hallucination in RAG systems and recommend important research papers I should read.",
+      "planner_strategy": "research",
+      "selected_sources": [
+        "general_ai",
+        "semantic_scholar",
+        "arxiv",
+        "trusted_web"
+      ],
+      "provider_counts": {
+        "mock_groq": 1,
+        "tavily": 5,
+        "arxiv": 5
+      },
+      "ui_distribution": {
+        "uploaded_notes": 0,
+        "trusted_web": 6,
+        "wikipedia": 0,
+        "research": 5,
+        "books": 0,
+        "videos": 0,
+        "code_examples": 0
+      },
+      "response_status": "SUCCESS",
+      "latency_ms": 13114.66,
+      "failures": [],
+      "quality_score": 4.88,
+      "pass": true
+    },
+    {
+      "id": "TEST_E",
+      "name": "YouTube Learning Recommendations",
+      "query": "I want to learn Docker from beginner to advanced. Explain the learning path and recommend useful YouTube videos.",
+      "planner_strategy": "hybrid",
+      "selected_sources": [
+        "general_ai",
+        "wikipedia",
+        "video",
+        "trusted_web"
+      ],
+      "provider_counts": {
+        "mock_groq": 1,
+        "youtube": 5,
+        "tavily": 5
+      },
+      "ui_distribution": {
+        "uploaded_notes": 0,
+        "trusted_web": 6,
+        "wikipedia": 0,
+        "research": 0,
+        "books": 0,
+        "videos": 5,
+        "code_examples": 0
+      },
+      "response_status": "SUCCESS",
+      "latency_ms": 2869.43,
+      "failures": [],
+      "quality_score": 4.88,
+      "pass": true
+    },
+    {
+      "id": "TEST_F",
+      "name": "GitHub Resource Discovery",
+      "query": "I want to learn FastAPI. Recommend the best GitHub repositories and explain what I can learn from each.",
+      "planner_strategy": "hybrid",
+      "selected_sources": [
+        "general_ai",
+        "wikipedia",
+        "github_repo",
+        "trusted_web"
+      ],
+      "provider_counts": {
+        "mock_groq": 1,
+        "tavily": 5,
+        "wikipedia": 5,
+        "github": 4
+      },
+      "ui_distribution": {
+        "uploaded_notes": 0,
+        "trusted_web": 6,
+        "wikipedia": 5,
+        "research": 0,
+        "books": 0,
+        "videos": 0,
+        "code_examples": 4
+      },
+      "response_status": "SUCCESS",
+      "latency_ms": 3314.53,
+      "failures": [],
+      "quality_score": 4.88,
+      "pass": true
+    },
+    {
+      "id": "TEST_G",
+      "name": "Mixed Multi-Source Request",
+      "query": "Explain RAG hallucination. Also give me important research papers, YouTube videos, and useful GitHub repositories.",
+      "planner_strategy": "research",
+      "selected_sources": [
+        "general_ai",
+        "semantic_scholar",
+        "arxiv",
+        "trusted_web",
+        "video",
+        "github_repo"
+      ],
+      "provider_counts": {
+        "mock_groq": 1,
+        "youtube": 5,
+        "tavily": 5,
+        "github": 5,
+        "arxiv": 5
+      },
+      "ui_distribution": {
+        "uploaded_notes": 0,
+        "trusted_web": 6,
+        "wikipedia": 0,
+        "research": 5,
+        "books": 0,
+        "videos": 5,
+        "code_examples": 5
+      },
+      "response_status": "SUCCESS",
+      "latency_ms": 3316.96,
+      "failures": [],
+      "quality_score": 4.88,
+      "pass": true
+    },
+    {
+      "id": "TEST_H",
+      "name": "Wikipedia / General Knowledge",
+      "query": "Explain entropy in information theory in a beginner-friendly but detailed way.",
+      "planner_strategy": "general_knowledge",
+      "selected_sources": [
+        "general_ai",
+        "wikipedia"
+      ],
+      "provider_counts": {
+        "mock_groq": 1
+      },
+      "ui_distribution": {
+        "uploaded_notes": 0,
+        "trusted_web": 1,
+        "wikipedia": 0,
+        "research": 0,
+        "books": 0,
+        "videos": 0,
+        "code_examples": 0
+      },
+      "response_status": "SUCCESS",
+      "latency_ms": 2460.27,
+      "failures": [],
+      "quality_score": 4.88,
+      "pass": true
+    }
+  ],
+  "provider_telemetry": {
+    "mock_groq": 7,
+    "wikipedia": 13,
+    "uploaded_documents": 4,
+    "tavily": 20,
+    "arxiv": 10,
+    "youtube": 10,
+    "github": 9
+  }
+}

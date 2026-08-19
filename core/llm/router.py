@@ -12,16 +12,16 @@ class IntelligentRouter:
     """Selects optimal provider based on task intent and real-time circuit health."""
 
     ROUTING_PREFERENCES: Dict[str, List[str]] = {
-        "general_chat": ["groq", "gemini", "cohere", "mistral"],
-        "document_qa": ["gemini", "groq", "cohere", "mistral"],
-        "executive_reports": ["gemini", "groq", "cohere", "mistral"],
-        "long_summaries": ["cohere", "gemini", "groq", "mistral"],
-        "code_questions": ["mistral", "groq", "gemini", "cohere"],
-        "QA": ["gemini", "groq", "cohere", "mistral"],
-        "SUMMARY": ["gemini", "groq", "cohere", "mistral"],
-        "REPORT": ["gemini", "groq", "cohere", "mistral"],
-        "COMPARE": ["gemini", "groq", "cohere", "mistral"],
-        "default": ["gemini", "groq", "cohere", "mistral"],
+        "general_chat": ["groq", "gemini", "mistral", "cohere"],
+        "document_qa": ["groq", "gemini", "mistral", "cohere"],
+        "executive_reports": ["groq", "gemini", "mistral", "cohere"],
+        "long_summaries": ["groq", "gemini", "mistral", "cohere"],
+        "code_questions": ["groq", "mistral", "gemini", "cohere"],
+        "QA": ["groq", "gemini", "mistral", "cohere"],
+        "SUMMARY": ["groq", "gemini", "mistral", "cohere"],
+        "REPORT": ["groq", "gemini", "mistral", "cohere"],
+        "COMPARE": ["groq", "gemini", "mistral", "cohere"],
+        "default": ["groq", "gemini", "mistral", "cohere"],
     }
 
     def __init__(self, registry: ProviderRegistry):
@@ -79,6 +79,11 @@ class IntelligentRouter:
                 continue
 
             ordered.append(provider)
+
+        # Include custom registered providers if not already in ordered list
+        for name, provider in self.registry.providers.items():
+            if provider not in ordered and not provider.is_circuit_open():
+                ordered.append(provider)
 
         logger.info(f"Intelligent Router [Intent: {intent}] -> Selected: {[p.name for p in ordered]} | Skipped: {skipped}")
         return ordered

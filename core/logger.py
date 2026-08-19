@@ -9,7 +9,21 @@ import sys
 from pathlib import Path
 from loguru import logger
 
+# Reconfigure stdout and stderr for UTF-8 on Windows environments
+if hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
+if hasattr(sys.stderr, "reconfigure"):
+    try:
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 # Ensure logs directory exists
+
 LOG_DIR = Path(__file__).parent.parent / "data" / "logs"
 LOG_DIR.mkdir(parents=True, exist_ok=True)
 LOG_FILE = LOG_DIR / "ekip.log"

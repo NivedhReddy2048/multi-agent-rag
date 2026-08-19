@@ -135,12 +135,35 @@ class IncrementalBM25:
         scores.sort(key=lambda x: x[1], reverse=True)
         return scores
 
-    def get_top_k(self, query: str, k: int = 5) -> List[str]:
-        scored = self.score(query)[:k]
+    def get_top_k(
+        self,
+        query: str,
+        k: int = 5,
+        doc_filter: Optional[List[str]] = None,
+        chunk_metadata: Optional[List[Dict]] = None
+    ) -> List[str]:
+        scored = self.score(query)
         top_ids = []
+        filter_set = set(doc_filter) if doc_filter else None
+
+        meta_map = {}
+        if chunk_metadata:
+            for m in chunk_metadata:
+                cid = m.get("chunk_id")
+                if cid:
+                    meta_map[cid] = m.get("document_id") or m.get("source_file")
+
         for idx, _ in scored:
             if idx < len(self.doc_chunk_ids):
-                top_ids.append(self.doc_chunk_ids[idx])
+                cid = self.doc_chunk_ids[idx]
+                if filter_set:
+                    doc_id = meta_map.get(cid)
+                    if doc_id and doc_id not in filter_set:
+                        continue
+                top_ids.append(cid)
+                if len(top_ids) >= k:
+                    break
+
         return top_ids
 
 
@@ -165,7 +188,10 @@ def get_cached_reranker(model_name: str):
 class BaseRAGEngine:
     """Agent-ready Hybrid RAG engine managing dense vectors, sparse BM25, RRF, and CrossEncoder."""
 
+    _instance = None
+
     def __init__(self, config):
+        BaseRAGEngine._instance = self
         self.cfg = config
         self.embeddings = get_cached_embeddings(config.EMBEDDING_MODEL)
         self.reranker = get_cached_reranker(config.RERANKER_MODEL)
@@ -190,6 +216,10 @@ class BaseRAGEngine:
         self._load_registry()
         self._load_chunk_metadata()
         self._init_bm25()
+
+    @classmethod
+    def get_instance(cls):
+        return cls._instance
 
     def _init_chroma(self):
         client = chromadb.PersistentClient(path=self.persist_dir)
@@ -346,7 +376,7 @@ class BaseRAGEngine:
             if len(valid) == 1:
                 filter_dict = {"document_id": valid[0]}
             elif len(valid) > 1:
-                filter_dict = {"document_id": {"$in": valid}}
+                filter_dict = {"$or": [{"document_id": v} for v in valid]}
 
         try:
             results_with_scores = self.vector_db.similarity_search_with_score(query, k=k, filter=filter_dict)
@@ -364,14 +394,43 @@ class BaseRAGEngine:
                 docs.append(doc)
             return docs
 
-    def sparse_search(self, query: str, k: int = 8) -> List[Document]:
-        top_chunk_ids = self.bm25.get_top_k(query, k=k)
+    def sparse_search(self, query: str, k: int = 8, doc_filter: Optional[List[str]] = None) -> List[Document]:
+        top_chunk_ids = self.bm25.get_top_k(query, k=k, doc_filter=doc_filter, chunk_metadata=self.chunk_metadata)
         docs = []
         for cid in top_chunk_ids:
             d = self.get_chunk_by_id(cid)
             if d:
                 docs.append(d)
         return docs
+
+    def hybrid_search(self, query: str, k: int = 8, doc_filter: Optional[List[str]] = None) -> List[Document]:
+        """Hybrid search combining dense ChromaDB vector search and sparse BM25 with optional document filtering."""
+        dense = self.dense_search(query, k=k*2, doc_filter=doc_filter)
+        sparse = self.sparse_search(query, k=k*2, doc_filter=doc_filter)
+        fusion = self.reciprocal_rank_fusion(dense, sparse, k=60)
+        reranked = self.rerank(query, fusion, top_k=k)
+        return [d for d, _ in reranked]
+
+    def multi_doc_search(self, query: str, target_docs: Optional[List[str]] = None, k_per_doc: int = 4) -> List[Document]:
+        """Perform balanced, per-document retrieval across active indexed documents to eliminate chunk-count bias."""
+        if not target_docs:
+            target_docs = list(self.document_registry.keys())
+
+        if not target_docs:
+            return []
+
+        all_docs = []
+        seen_ids = set()
+
+        for doc_name in target_docs:
+            doc_results = self.hybrid_search(query, k=k_per_doc, doc_filter=[doc_name])
+            for d in doc_results:
+                cid = d.metadata.get("chunk_id", str(hash(d.page_content)))
+                if cid not in seen_ids:
+                    seen_ids.add(cid)
+                    all_docs.append(d)
+
+        return all_docs
 
     def reciprocal_rank_fusion(self, dense: List[Document], sparse: List[Document], k: int = 60) -> List[Document]:
         scores = defaultdict(float)
@@ -387,18 +446,40 @@ class BaseRAGEngine:
         sorted_docs = [docs_map[uid] for uid, _ in sorted(scores.items(), key=lambda x: x[1], reverse=True)]
         return sorted_docs
 
-    def rerank(self, query: str, docs: List[Document], top_k: int = 6) -> List[Tuple[Document, float]]:
+    def rerank(self, query: str, docs: List[Document], top_k: int = 6, min_score_override: Optional[float] = None) -> List[Tuple[Document, float]]:
+        if min_score_override is not None:
+            min_score = float(min_score_override)
+        else:
+            min_score = float(getattr(self.cfg, "MIN_RERANK_SCORE", 0.0))
+
         if not docs:
             self._last_scores = []
+            self._last_retrieved_count = 0
+            self._last_reranked_count = 0
+            self._last_rejected_count = 0
+            self._last_min_score_used = min_score
             return []
+
         corpus = [d.page_content for d in docs[:20]]
         pairs = [[query, t] for t in corpus]
         scores = self.reranker.predict(pairs)
         scored = sorted(zip(docs[:20], scores), key=lambda x: x[1], reverse=True)
-        self._last_scores = [float(s) for _, s in scored[:top_k]]
-        for doc, score in scored[:top_k]:
+        
+        # Attach raw scores
+        for doc, score in scored:
             doc.metadata["score"] = float(score)
-        return scored[:top_k]
+
+        # Filter by configurable minimum rerank threshold
+        relevant_scored = [(doc, float(score)) for doc, score in scored if float(score) >= min_score]
+        
+        self._last_retrieved_count = len(docs)
+        self._last_reranked_count = len(corpus)
+        self._last_rejected_count = len(scored) - len(relevant_scored)
+        self._last_scores = [s for _, s in relevant_scored[:top_k]]
+        self._last_min_score_used = min_score
+        
+        return relevant_scored[:top_k]
+
 
     def compress_context(self, docs: List[Tuple[Document, float]], max_chunks: int = 6) -> List[Document]:
         """Semantic deduplication by page, retaining similarity/relevance score in metadata."""
@@ -419,3 +500,4 @@ class BaseRAGEngine:
 
     def list_docs(self) -> Dict:
         return self.document_registry
+

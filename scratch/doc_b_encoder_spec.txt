@@ -1,0 +1,1 @@
+The EKIP-Encoder Module consists of 6 Transformer encoder blocks. Each block features 8 self-attention heads and a feed-forward dimension of 2048. The encoder uses Rotary Position Embeddings (RoPE). Note: This specification document covers ONLY the encoder module; decoder specifications are intentionally excluded.

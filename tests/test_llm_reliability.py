@@ -87,7 +87,7 @@ class TestMultiLLMOrchestration(unittest.TestCase):
             raise Exception("500 Slow Timeout Error")
 
         with patch.object(gemini_prov, "generate", side_effect=slow_fail), \
-             patch.object(groq_prov, "generate", return_value=("Fast Groq response", "llama-3.3-70b-versatile", 5, 10)):
+             patch.object(groq_prov, "generate", return_value=("Fast Groq response", "groq/compound", 5, 10)):
 
             t0 = time.time()
             res = test_mgr.generate("Fast failover test", timeout=2.0)
@@ -131,7 +131,7 @@ class TestMultiLLMOrchestration(unittest.TestCase):
         groq_prov.reset_circuit()
 
         with patch.object(gemini_prov, "generate", side_effect=Exception("RESOURCE_EXHAUSTED 429 GoogleRPCError")), \
-             patch.object(groq_prov, "generate", return_value=("Groq safe answer", "llama-3.3-70b-versatile", 5, 10)):
+             patch.object(groq_prov, "generate", return_value=("Groq safe answer", "groq/compound", 5, 10)):
 
             res = test_mgr.generate("Safe test")
             forbidden = ["RESOURCE_EXHAUSTED", "429", "GoogleRPCError", "Traceback", "AttributeError", "HTTP 500"]
@@ -168,9 +168,9 @@ class TestMultiLLMOrchestration(unittest.TestCase):
         self.assertIn("gemini-2.0-flash", html_gemini)
 
         # 4. Test Groq provider metadata
-        html_groq = render_llm_telemetry_pill({"provider": "groq", "model": "llama-3.3-70b-versatile", "latency_ms": 180, "tokens": 80})
+        html_groq = render_llm_telemetry_pill({"provider": "groq", "model": "groq/compound", "latency_ms": 180, "tokens": 80})
         self.assertIn("<b>GROQ</b>", html_groq)
-        self.assertIn("llama-3.3-70b-versatile", html_groq)
+        self.assertIn("groq/compound", html_groq)
 
         # 5. Test Cohere provider metadata
         html_cohere = render_llm_telemetry_pill({"provider": "cohere", "model": "command-r-plus"})

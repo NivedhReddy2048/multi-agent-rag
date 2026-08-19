@@ -17,6 +17,7 @@ from core.llm import LLMManager
 
 class TestProductionRefactor(unittest.TestCase):
     def setUp(self):
+        LLMManager._instance = None
         self.engine = MagicMock()
         self.memory = MagicMock()
         self.orchestrator = OrchestratorAgent(Config, self.engine, self.memory)
@@ -96,6 +97,8 @@ class TestProductionRefactor(unittest.TestCase):
         manager = LLMManager(Config)
         gemini = manager.registry.get_provider("gemini")
         groq = manager.registry.get_provider("groq")
+        gemini.api_key = "dummy_gemini_key"
+        groq.api_key = "dummy_groq_key"
         gemini.reset_circuit()
         groq.reset_circuit()
         with patch.object(gemini, "generate", side_effect=Exception("429 RESOURCE_EXHAUSTED")), \
@@ -110,6 +113,7 @@ class TestProductionRefactor(unittest.TestCase):
         manager = LLMManager(Config)
         providers = [manager.registry.get_provider(name) for name in ("gemini", "groq", "cohere", "mistral")]
         for provider in providers:
+            provider.api_key = f"dummy_{provider.name}_key"
             provider.reset_circuit()
         patches = [patch.object(provider, "generate", side_effect=Exception("500 unavailable")) for provider in providers]
         for provider_patch in patches:

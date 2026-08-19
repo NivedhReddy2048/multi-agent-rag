@@ -59,14 +59,14 @@ class TestMultiLLMIntegration(unittest.TestCase):
         groq_prov = self.llm_mgr.registry.get_provider("groq")
 
         with patch.object(gemini_prov, "generate", side_effect=Exception("429 RESOURCE_EXHAUSTED")), \
-             patch.object(groq_prov, "generate", return_value=("Groq fallback response", "llama-3.3-70b-versatile", 20, 40)):
+             patch.object(groq_prov, "generate", return_value=("Groq fallback response", "groq/compound", 20, 40)):
 
             res = self.llm_mgr.generate("What is quantum computing?", intent="QA")
 
             self.assertIsInstance(res, LLMResponse)
             self.assertTrue(res.success)
             self.assertEqual(res.provider, "groq")
-            self.assertEqual(res.model, "llama-3.3-70b-versatile")
+            self.assertEqual(res.model, "groq/compound")
             self.assertEqual(res.content, "Groq fallback response")
             self.assertTrue(res.fallback_occurred)
             self.assertIn("gemini", res.fallback_chain)
@@ -135,7 +135,7 @@ class TestMultiLLMIntegration(unittest.TestCase):
         groq_prov = self.llm_mgr.registry.get_provider("groq")
 
         with patch.object(gemini_prov, "generate", side_effect=Exception("429 RESOURCE_EXHAUSTED")), \
-             patch.object(groq_prov, "generate", return_value=("Groq end-to-end answer [SOURCE 1]", "llama-3.3-70b-versatile", 12, 24)):
+             patch.object(groq_prov, "generate", return_value=("Groq end-to-end answer [SOURCE 1]", "groq/compound", 12, 24)):
 
             ctx = {
                 "query": "What is the policy?",
@@ -146,7 +146,7 @@ class TestMultiLLMIntegration(unittest.TestCase):
 
             self.assertIsNotNone(res.metadata)
             self.assertEqual(res.metadata.get("provider"), "groq")
-            self.assertEqual(res.metadata.get("model"), "llama-3.3-70b-versatile")
+            self.assertEqual(res.metadata.get("model"), "groq/compound")
             self.assertGreater(res.metadata.get("tokens", 0), 0)
             self.assertTrue(res.metadata.get("fallback_occurred"))
             self.assertNotEqual(res.metadata.get("provider"), "UNKNOWN")

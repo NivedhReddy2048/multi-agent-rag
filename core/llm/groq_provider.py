@@ -25,6 +25,7 @@ class GroqProvider(BaseLLMProvider):
             temperature=temperature,
             max_tokens=max_tokens,
             request_timeout=timeout,
+            max_retries=1,
         )
         self.client_cache[cache_key] = client
         return client

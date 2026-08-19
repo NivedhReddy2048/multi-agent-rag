@@ -190,14 +190,24 @@ class DocumentLoader:
         if cb:
             cb(0.7, f"Chunking document '{file_name}'...")
 
+        import datetime
+        doc_title = file_name.replace("_", " ").rsplit(".", 1)[0].title()
+        doc_type = file_name.rsplit(".", 1)[-1].lower() if "." in file_name else "file"
+        now_iso = datetime.datetime.now().isoformat()
+
         chunks = self.splitter.split_documents(docs)
         for i, c in enumerate(chunks):
             c.metadata.update({
                 "chunk_id": f"{file_name}_{i}",
                 "source_file": file_name,
+                "filename": file_name,
                 "document_id": file_name,
-                "page_number": c.metadata.get("page_number", 1),
+                "document_title": doc_title,
+                "page_number": c.metadata.get("page_number", c.metadata.get("page", 1)),
+                "upload_timestamp": c.metadata.get("upload_timestamp", now_iso),
+                "document_type": doc_type,
             })
+
 
         if cb:
             cb(0.85, f"Created {len(chunks)} chunks for {file_name}")

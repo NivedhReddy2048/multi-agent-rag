@@ -1,0 +1,312 @@
+{
+  "calibration": [
+    {
+      "scenario": "Scenario 1 \u2014 Highly Relevant",
+      "query": "Explain Transformer architecture.",
+      "doc_count": 1,
+      "crag_is_sufficient": true,
+      "crag_score": 0.5,
+      "chunks": [
+        {
+          "scenario": "Scenario 1 \u2014 Highly Relevant",
+          "query": "Explain Transformer architecture.",
+          "source": "transformer_paper.pdf",
+          "category": "HIGHLY_RELEVANT",
+          "crossencoder_score": 6.617,
+          "kv_relevance_score": 1.0,
+          "content_preview": "Transformer architecture uses self-attention mechanisms with Query, Key, Value vectors, multi-head a..."
+        }
+      ]
+    },
+    {
+      "scenario": "Scenario 2 \u2014 Completely Irrelevant",
+      "query": "Explain Transformer architecture.",
+      "doc_count": 1,
+      "crag_is_sufficient": false,
+      "crag_score": 0.03,
+      "chunks": [
+        {
+          "scenario": "Scenario 2 \u2014 Completely Irrelevant",
+          "query": "Explain Transformer architecture.",
+          "source": "db_notes.pdf",
+          "category": "IRRELEVANT",
+          "crossencoder_score": -11.3658,
+          "kv_relevance_score": 0.65,
+          "content_preview": "Database indexing uses B-trees, hash indexes, and query execution plans to improve database lookup p..."
+        }
+      ]
+    },
+    {
+      "scenario": "Scenario 3 \u2014 Mixed Documents",
+      "query": "Explain Transformer architecture.",
+      "doc_count": 5,
+      "crag_is_sufficient": true,
+      "crag_score": 0.58,
+      "chunks": [
+        {
+          "scenario": "Scenario 3 \u2014 Mixed Documents",
+          "query": "Explain Transformer architecture.",
+          "source": "transformer_doc.pdf",
+          "category": "HIGHLY_RELEVANT",
+          "crossencoder_score": 7.0003,
+          "kv_relevance_score": 1.0,
+          "content_preview": "Transformer architecture relies on self-attention mechanisms with Query, Key, and Value vectors to p..."
+        },
+        {
+          "scenario": "Scenario 3 \u2014 Mixed Documents",
+          "query": "Explain Transformer architecture.",
+          "source": "db_indexing.pdf",
+          "category": "IRRELEVANT",
+          "crossencoder_score": -11.3867,
+          "kv_relevance_score": 0.65,
+          "content_preview": "Database indexing uses B-trees and hash tables to optimize query retrieval speed and indexing perfor..."
+        },
+        {
+          "scenario": "Scenario 3 \u2014 Mixed Documents",
+          "query": "Explain Transformer architecture.",
+          "source": "microservices.pdf",
+          "category": "IRRELEVANT",
+          "crossencoder_score": -7.6593,
+          "kv_relevance_score": 0.65,
+          "content_preview": "Microservices architecture divides large applications into small independent service components comm..."
+        },
+        {
+          "scenario": "Scenario 3 \u2014 Mixed Documents",
+          "query": "Explain Transformer architecture.",
+          "source": "os_scheduling.pdf",
+          "category": "IRRELEVANT",
+          "crossencoder_score": -11.3216,
+          "kv_relevance_score": 0.65,
+          "content_preview": "Operating system process scheduling algorithms include Round Robin, Shortest Job First, and Priority..."
+        },
+        {
+          "scenario": "Scenario 3 \u2014 Mixed Documents",
+          "query": "Explain Transformer architecture.",
+          "source": "random_notes.txt",
+          "category": "IRRELEVANT",
+          "crossencoder_score": -11.4156,
+          "kv_relevance_score": 0.65,
+          "content_preview": "Random daily notes: Remember to buy milk, check grocery list, and call the mechanic about car repair..."
+        }
+      ]
+    },
+    {
+      "scenario": "Scenario 4 \u2014 Weak Keyword Collision",
+      "query": "Explain Transformer architecture.",
+      "doc_count": 1,
+      "crag_is_sufficient": false,
+      "crag_score": 0.26,
+      "chunks": [
+        {
+          "scenario": "Scenario 4 \u2014 Weak Keyword Collision",
+          "query": "Explain Transformer architecture.",
+          "source": "software_arch.pdf",
+          "category": "WEAKLY_RELATED",
+          "crossencoder_score": -8.1074,
+          "kv_relevance_score": 0.65,
+          "content_preview": "Software architecture requires careful attention to system design, modularity, fault tolerance, and ..."
+        }
+      ]
+    },
+    {
+      "scenario": "Scenario 5 \u2014 Partially Relevant",
+      "query": "Explain Transformer architecture.",
+      "doc_count": 1,
+      "crag_is_sufficient": false,
+      "crag_score": 0.03,
+      "chunks": [
+        {
+          "scenario": "Scenario 5 \u2014 Partially Relevant",
+          "query": "Explain Transformer architecture.",
+          "source": "attention_intro.pdf",
+          "category": "PARTIALLY_RELEVANT",
+          "crossencoder_score": -10.6845,
+          "kv_relevance_score": 0.65,
+          "content_preview": "Attention mechanisms allow machine learning models to focus on important parts of sequential input r..."
+        }
+      ]
+    },
+    {
+      "scenario": "Scenario 6 \u2014 Broad Query",
+      "query": "Explain machine learning.",
+      "doc_count": 5,
+      "crag_is_sufficient": false,
+      "crag_score": 0.33,
+      "chunks": [
+        {
+          "scenario": "Scenario 6 \u2014 Broad Query",
+          "query": "Explain machine learning.",
+          "source": "ml_basics.pdf",
+          "category": "PARTIALLY_RELEVANT",
+          "crossencoder_score": -6.2175,
+          "kv_relevance_score": 0.65,
+          "content_preview": "Supervised learning trains algorithms on labeled data to learn mappings from inputs to targets...."
+        },
+        {
+          "scenario": "Scenario 6 \u2014 Broad Query",
+          "query": "Explain machine learning.",
+          "source": "nn_intro.pdf",
+          "category": "PARTIALLY_RELEVANT",
+          "crossencoder_score": -10.7155,
+          "kv_relevance_score": 0.65,
+          "content_preview": "Neural networks consist of layers of interconnected nodes that pass signals through activation funct..."
+        },
+        {
+          "scenario": "Scenario 6 \u2014 Broad Query",
+          "query": "Explain machine learning.",
+          "source": "transformer_overview.pdf",
+          "category": "PARTIALLY_RELEVANT",
+          "crossencoder_score": -7.6715,
+          "kv_relevance_score": 0.65,
+          "content_preview": "Transformer architecture is a modern deep learning model designed for natural language processing us..."
+        },
+        {
+          "scenario": "Scenario 6 \u2014 Broad Query",
+          "query": "Explain machine learning.",
+          "source": "db_indexing.pdf",
+          "category": "IRRELEVANT",
+          "crossencoder_score": -11.3863,
+          "kv_relevance_score": 0.65,
+          "content_preview": "Database indexing uses B-tree indexes to accelerate SQL SELECT statements...."
+        },
+        {
+          "scenario": "Scenario 6 \u2014 Broad Query",
+          "query": "Explain machine learning.",
+          "source": "recipes.txt",
+          "category": "IRRELEVANT",
+          "crossencoder_score": -11.1584,
+          "kv_relevance_score": 0.65,
+          "content_preview": "Pasta recipe: Boil water, add salt, cook pasta for 8 minutes, prepare tomato basil sauce...."
+        }
+      ]
+    }
+  ],
+  "score_records": [
+    {
+      "scenario": "Scenario 1 \u2014 Highly Relevant",
+      "query": "Explain Transformer architecture.",
+      "source": "transformer_paper.pdf",
+      "category": "HIGHLY_RELEVANT",
+      "crossencoder_score": 6.617,
+      "kv_relevance_score": 1.0,
+      "content_preview": "Transformer architecture uses self-attention mechanisms with Query, Key, Value vectors, multi-head a..."
+    },
+    {
+      "scenario": "Scenario 2 \u2014 Completely Irrelevant",
+      "query": "Explain Transformer architecture.",
+      "source": "db_notes.pdf",
+      "category": "IRRELEVANT",
+      "crossencoder_score": -11.3658,
+      "kv_relevance_score": 0.65,
+      "content_preview": "Database indexing uses B-trees, hash indexes, and query execution plans to improve database lookup p..."
+    },
+    {
+      "scenario": "Scenario 3 \u2014 Mixed Documents",
+      "query": "Explain Transformer architecture.",
+      "source": "transformer_doc.pdf",
+      "category": "HIGHLY_RELEVANT",
+      "crossencoder_score": 7.0003,
+      "kv_relevance_score": 1.0,
+      "content_preview": "Transformer architecture relies on self-attention mechanisms with Query, Key, and Value vectors to p..."
+    },
+    {
+      "scenario": "Scenario 3 \u2014 Mixed Documents",
+      "query": "Explain Transformer architecture.",
+      "source": "db_indexing.pdf",
+      "category": "IRRELEVANT",
+      "crossencoder_score": -11.3867,
+      "kv_relevance_score": 0.65,
+      "content_preview": "Database indexing uses B-trees and hash tables to optimize query retrieval speed and indexing perfor..."
+    },
+    {
+      "scenario": "Scenario 3 \u2014 Mixed Documents",
+      "query": "Explain Transformer architecture.",
+      "source": "microservices.pdf",
+      "category": "IRRELEVANT",
+      "crossencoder_score": -7.6593,
+      "kv_relevance_score": 0.65,
+      "content_preview": "Microservices architecture divides large applications into small independent service components comm..."
+    },
+    {
+      "scenario": "Scenario 3 \u2014 Mixed Documents",
+      "query": "Explain Transformer architecture.",
+      "source": "os_scheduling.pdf",
+      "category": "IRRELEVANT",
+      "crossencoder_score": -11.3216,
+      "kv_relevance_score": 0.65,
+      "content_preview": "Operating system process scheduling algorithms include Round Robin, Shortest Job First, and Priority..."
+    },
+    {
+      "scenario": "Scenario 3 \u2014 Mixed Documents",
+      "query": "Explain Transformer architecture.",
+      "source": "random_notes.txt",
+      "category": "IRRELEVANT",
+      "crossencoder_score": -11.4156,
+      "kv_relevance_score": 0.65,
+      "content_preview": "Random daily notes: Remember to buy milk, check grocery list, and call the mechanic about car repair..."
+    },
+    {
+      "scenario": "Scenario 4 \u2014 Weak Keyword Collision",
+      "query": "Explain Transformer architecture.",
+      "source": "software_arch.pdf",
+      "category": "WEAKLY_RELATED",
+      "crossencoder_score": -8.1074,
+      "kv_relevance_score": 0.65,
+      "content_preview": "Software architecture requires careful attention to system design, modularity, fault tolerance, and ..."
+    },
+    {
+      "scenario": "Scenario 5 \u2014 Partially Relevant",
+      "query": "Explain Transformer architecture.",
+      "source": "attention_intro.pdf",
+      "category": "PARTIALLY_RELEVANT",
+      "crossencoder_score": -10.6845,
+      "kv_relevance_score": 0.65,
+      "content_preview": "Attention mechanisms allow machine learning models to focus on important parts of sequential input r..."
+    },
+    {
+      "scenario": "Scenario 6 \u2014 Broad Query",
+      "query": "Explain machine learning.",
+      "source": "ml_basics.pdf",
+      "category": "PARTIALLY_RELEVANT",
+      "crossencoder_score": -6.2175,
+      "kv_relevance_score": 0.65,
+      "content_preview": "Supervised learning trains algorithms on labeled data to learn mappings from inputs to targets...."
+    },
+    {
+      "scenario": "Scenario 6 \u2014 Broad Query",
+      "query": "Explain machine learning.",
+      "source": "nn_intro.pdf",
+      "category": "PARTIALLY_RELEVANT",
+      "crossencoder_score": -10.7155,
+      "kv_relevance_score": 0.65,
+      "content_preview": "Neural networks consist of layers of interconnected nodes that pass signals through activation funct..."
+    },
+    {
+      "scenario": "Scenario 6 \u2014 Broad Query",
+      "query": "Explain machine learning.",
+      "source": "transformer_overview.pdf",
+      "category": "PARTIALLY_RELEVANT",
+      "crossencoder_score": -7.6715,
+      "kv_relevance_score": 0.65,
+      "content_preview": "Transformer architecture is a modern deep learning model designed for natural language processing us..."
+    },
+    {
+      "scenario": "Scenario 6 \u2014 Broad Query",
+      "query": "Explain machine learning.",
+      "source": "db_indexing.pdf",
+      "category": "IRRELEVANT",
+      "crossencoder_score": -11.3863,
+      "kv_relevance_score": 0.65,
+      "content_preview": "Database indexing uses B-tree indexes to accelerate SQL SELECT statements...."
+    },
+    {
+      "scenario": "Scenario 6 \u2014 Broad Query",
+      "query": "Explain machine learning.",
+      "source": "recipes.txt",
+      "category": "IRRELEVANT",
+      "crossencoder_score": -11.1584,
+      "kv_relevance_score": 0.65,
+      "content_preview": "Pasta recipe: Boil water, add salt, cook pasta for 8 minutes, prepare tomato basil sauce...."
+    }
+  ]
+}

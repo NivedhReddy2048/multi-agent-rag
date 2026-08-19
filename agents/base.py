@@ -5,7 +5,7 @@ from typing import Dict, List, Any
 from dataclasses import dataclass, field
 
 
-SOURCE_MODES = frozenset({"documents", "documents+web", "web", "none"})
+SOURCE_MODES = frozenset({"documents", "documents+web", "web", "general_knowledge", "none"})
 
 
 @dataclass

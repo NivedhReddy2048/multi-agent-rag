@@ -55,6 +55,9 @@ class LLMResponse:
     prompt_tokens: int = 0
     completion_tokens: int = 0
     failure_reason: str = ""
+    attempts_detail: List[Dict[str, Any]] = field(default_factory=list)
+    prompt_builder_used: bool = False
+    prompt_length_chars: int = 0
 
     def __post_init__(self):
         if not self.fallback_chain:
@@ -74,6 +77,9 @@ class LLMResponse:
             "fallback_chain": self.fallback_chain,
             "prompt_tokens": self.prompt_tokens,
             "completion_tokens": self.completion_tokens,
+            "attempts_detail": self.attempts_detail,
+            "prompt_builder_used": self.prompt_builder_used,
+            "prompt_length_chars": self.prompt_length_chars,
         }
 
 

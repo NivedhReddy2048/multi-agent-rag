@@ -1,0 +1,6 @@
+The system uses 8 attention heads.
+Hidden dimension is 256.
+The encoder contains 6 layers.
+Dropout rate is 0.1.
+Training uses the AdamW optimizer.
+The system was designed for text classification.

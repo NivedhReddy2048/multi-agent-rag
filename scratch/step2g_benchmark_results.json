@@ -1,0 +1,137 @@
+[
+  {
+    "test_id": 1,
+    "name": "Fully Supported Single Source",
+    "strategy": "document_only",
+    "sources_count": 1,
+    "faithfulness": 0.25,
+    "faithfulness_applicable": true,
+    "provenance_match": true,
+    "warnings": [],
+    "passed": false
+  },
+  {
+    "test_id": 2,
+    "name": "Wrong Citation Attribution",
+    "strategy": "document_only",
+    "sources_count": 2,
+    "faithfulness": 0.0,
+    "attribution_valid": false,
+    "provenance_match": true,
+    "warnings": [
+      "EVIDENCE_CONTRADICTION_DETECTED"
+    ],
+    "passed": true
+  },
+  {
+    "test_id": 3,
+    "name": "Numeric Contradiction",
+    "strategy": "document_only",
+    "sources_count": 1,
+    "faithfulness": 0.0,
+    "claims_contradicted": 1,
+    "provenance_match": true,
+    "warnings": [
+      "EVIDENCE_CONTRADICTION_DETECTED"
+    ],
+    "passed": true
+  },
+  {
+    "test_id": 4,
+    "name": "Invalid Citation Index",
+    "strategy": "document_only",
+    "sources_count": 1,
+    "faithfulness": 0.0,
+    "citations_invalid": 1,
+    "provenance_match": true,
+    "warnings": [
+      "INVALID_CITATION_INDEX_DETECTED"
+    ],
+    "passed": true
+  },
+  {
+    "test_id": 5,
+    "name": "Multi-Source Correct Citation",
+    "strategy": "document_only",
+    "sources_count": 2,
+    "faithfulness": 1.0,
+    "citations_valid": 2,
+    "provenance_match": true,
+    "warnings": [],
+    "passed": true
+  },
+  {
+    "test_id": 6,
+    "name": "Mixed Relevant & Irrelevant Docs",
+    "strategy": "document_only",
+    "sources_count": 3,
+    "rejected_count": 0,
+    "faithfulness": 0.17,
+    "provenance_match": true,
+    "warnings": [],
+    "passed": false
+  },
+  {
+    "test_id": 7,
+    "name": "Missing Information Disclaimer",
+    "strategy": "document_only",
+    "sources_count": 1,
+    "faithfulness": 1.0,
+    "provenance_match": true,
+    "warnings": [],
+    "passed": true
+  },
+  {
+    "test_id": 8,
+    "name": "Conflicting Documents Detection",
+    "strategy": "document_only",
+    "sources_count": 2,
+    "conflict_prompt_injected": true,
+    "provenance_match": true,
+    "warnings": [],
+    "passed": true
+  },
+  {
+    "test_id": 9,
+    "name": "GENERAL_KNOWLEDGE Strategy",
+    "strategy": "general_knowledge",
+    "sources_count": 0,
+    "faithfulness": null,
+    "faithfulness_applicable": false,
+    "provenance_match": true,
+    "warnings": [],
+    "passed": true
+  },
+  {
+    "test_id": 10,
+    "name": "Strategy-Aware Threshold Boundary",
+    "gk_survived": false,
+    "doc_survived": true,
+    "provenance_match": true,
+    "warnings": [],
+    "passed": true
+  },
+  {
+    "test_id": 11,
+    "name": "Evidence Budget Stress Test",
+    "input_chunks": 6,
+    "budgeted_chunks": 4,
+    "budgeted_chars": 144,
+    "provenance_match": true,
+    "warnings": [],
+    "passed": true
+  },
+  {
+    "test_id": 12,
+    "name": "Provider Failure / Fallback Request",
+    "fallback_occurred": true,
+    "fallback_chain": [
+      "ollama",
+      "gemini-fallback"
+    ],
+    "faithfulness": 1.0,
+    "provenance_match": true,
+    "warnings": [],
+    "passed": true
+  }
+]
