@@ -517,7 +517,18 @@ The application will be accessible locally at `http://localhost:8501`.
 
 ## 🖼️ UI Screenshots
 
-> Screenshots will be added in a future documentation update.
+![Student Login](https://github.com/NivedhReddy2048/multi-agent-rag/blob/main/Images/Home%20UI.png?raw=true)
+
+![Student Login](https://github.com/NivedhReddy2048/multi-agent-rag/blob/main/Images/Response.png?raw=true)
+
+![Student Login](https://github.com/NivedhReddy2048/multi-agent-rag/blob/main/Images/Student_Workspace.png?raw=true)
+
+![Student Login](https://github.com/NivedhReddy2048/multi-agent-rag/blob/main/Images/Documents.png?raw=true)
+
+![Student Login](https://github.com/NivedhReddy2048/multi-agent-rag/blob/main/Images/Analytics.png?raw=true)
+
+![Student Login](https://github.com/NivedhReddy2048/multi-agent-rag/blob/main/Images/LLM%20Health.png?raw=true)
+
 
 ---
 
