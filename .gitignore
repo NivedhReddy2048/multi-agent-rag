@@ -12,7 +12,8 @@ __pycache__/
 .env
 
 # Streamlit cache
-.streamlit/
+.streamlit/*
+!.streamlit/config.toml
 
 # IDE
 .vscode/
